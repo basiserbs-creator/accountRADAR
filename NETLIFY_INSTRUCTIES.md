@@ -92,6 +92,12 @@ via de server werken zonder dat je ergens een sleutel hoeft in te vullen.
 
 ## Daarna: updates doorvoeren
 
+**Specifiek voor de update naar v3.1.0:** dit is een pure HTML/tekst-update
+(geen nieuwe Functions, geen nieuwe environment variables). Upload alleen het
+nieuwe `index.html` naar je GitHub-repository (overschrijft het bestaande
+bestand) en trigger een nieuwe deploy. Geen setup-link nodig, saldi blijven
+ongewijzigd.
+
 **Specifiek voor de update naar v3.0.0 (tokensysteem):** de environment
 variables van Fase 1 (`SESSION_SECRET`, `GOOGLE_PLACES_API_KEY`,
 `SETUP_SECRET`, `BLOBS_SITE_ID`, `BLOBS_TOKEN`) blijven ongewijzigd — die

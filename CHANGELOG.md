@@ -1,5 +1,15 @@
 # accountRADAR — changelog
 
+## v3.1.0 — 09-09-2026
+- Het tegoed heet nu overal "credits" in plaats van "tokens" (in de tool zelf; de Netlify Functions heten intern nog steeds `token-*`, dat ziet de gebruiker niet).
+- Een identieke zoekopdracht naar nieuwe bedrijven (zelfde regio + zelfde zoektermen) binnen 36 uur wordt gratis uit cache getoond, zonder opnieuw credits te kosten.
+- Overbodige uitleg bij "Nieuwe bedrijven vinden" verwijderd (stond al in het invoerveld zelf).
+- "Ingelogd als …" en de uitlogknop netter gestyled (stonden er rommelig/te krap bij).
+- De melding "Geen bestand geladen" bovenaan de zijbalk verdwijnt nu totdat er echt een bestand is ingeladen (stond dubbelop met de status onder "Bestand").
+- Hint-tekst bij bestand uploaden verkort naar "Werkt ook met bestanden op een netwerkschijf of in de cloud."
+- Het "Zoeken"-blok (zoekveld, actieradius, postcode) staat nu onder de tabbladen in plaats van erboven, en is standaard dichtgeklapt.
+- Tabvolgorde aangepast naar Account, Merk, Expiratie.
+
 ## v3.0.0 — 09-09-2026 (Fase 2 van het beveiligingsplan: tokensysteem)
 - **Tokensysteem toegevoegd.** Elke gebruiker heeft een saldo (zichtbaar bovenaan de zijbalk), of `billing_mode: onbeperkt` voor gebruikers zonder saldolimiet.
 - Kosten per actie: Excel-bestand koppelen 10 tokens (vast), zoekopdracht naar nieuwe bedrijven 10 + 2 tokens per resultaat (met een instelbaar maximum aantal resultaten en een kostenindicatie vooraf), aanvullingen exporteren 1 token per resultaat, verlopende contracten bekijken (Expiratie-tabblad) 1 token per getoond contract.
