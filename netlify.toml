@@ -5,3 +5,9 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+
+# Nette URL: /beheer toont beheer.html, zonder de .html-extensie in de adresbalk.
+[[redirects]]
+  from = "/beheer"
+  to = "/beheer.html"
+  status = 200

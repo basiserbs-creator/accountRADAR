@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const { usersStore } = require('./_store');
 const { makeSessionCookie } = require('./_auth');
+const { isAccountExpired } = require('./_accountdate');
 
 const MAX_ATTEMPTS = 3;
 const LOCKOUT_MINUTES = 10;
@@ -61,16 +62,24 @@ exports.handler = async (event) => {
     return { statusCode: 401, body: JSON.stringify(GENERIC_ERROR) };
   }
 
+  if (user.active === false) {
+    return { statusCode: 403, body: JSON.stringify({ error: 'Dit account is geblokkeerd. Neem contact op met de beheerder.' }) };
+  }
+
+  if (isAccountExpired(user.accountEnd)) {
+    return { statusCode: 403, body: JSON.stringify({ error: 'Dit account is verlopen op ' + user.accountEnd + '. Neem contact op met de beheerder.' }) };
+  }
+
   user.failedAttempts = 0;
   user.lockedUntil = null;
   user.lastLogin = Date.now();
   await store.set(username, JSON.stringify(user));
 
-  const cookie = makeSessionCookie({ username: username, klant: user.klant || null });
+  const cookie = makeSessionCookie({ username: username, klant: user.klant || null, isAdmin: user.isAdmin === true });
 
   return {
     statusCode: 200,
     headers: { 'Set-Cookie': cookie, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ok: true, username: username, klant: user.klant || null })
+    body: JSON.stringify({ ok: true, username: username, klant: user.klant || null, isAdmin: user.isAdmin === true })
   };
 };

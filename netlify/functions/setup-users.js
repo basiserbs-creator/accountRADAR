@@ -33,7 +33,10 @@ exports.handler = async (event) => {
       billingMode: u.billingMode,
       balance: u.billingMode === 'normaal' ? u.startBalance : null,
       startBalance: u.billingMode === 'normaal' ? u.startBalance : null,
-      totalUsed: 0
+      totalUsed: 0,
+      isAdmin: false,
+      active: true,
+      accountEnd: null
     }));
     created.push(u.username);
   }

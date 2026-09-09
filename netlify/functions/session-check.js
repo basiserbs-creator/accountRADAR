@@ -12,6 +12,6 @@ exports.handler = async (event) => {
   return {
     statusCode: 200,
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ loggedIn: true, username: session.username, klant: session.klant || null })
+    body: JSON.stringify({ loggedIn: true, username: session.username, klant: session.klant || null, isAdmin: session.isAdmin === true })
   };
 };

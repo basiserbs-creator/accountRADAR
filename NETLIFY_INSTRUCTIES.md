@@ -92,6 +92,21 @@ via de server werken zonder dat je ergens een sleutel hoeft in te vullen.
 
 ## Daarna: updates doorvoeren
 
+**Specifiek voor de update naar v4.0.0 (beheerpagina):** de bestaande
+environment variables blijven allemaal ongewijzigd — geen nieuwe nodig. Wel:
+1. Upload alle bestanden (inclusief het nieuwe `beheer.html` en de nieuwe
+   bestanden in `netlify/functions/`) naar je GitHub-repository.
+2. Trigger een nieuwe deploy.
+3. Open **eenmalig** de volgende link om het beheeraccount aan te maken:
+   `https://JOUW-SITE.netlify.app/.netlify/functions/setup-admin?secret=JOUW_SETUP_SECRET`
+   (zelfde SETUP_SECRET als bij de testgebruikers). Dit maakt het account
+   `basiser` aan met het wachtwoord dat in dit gesprek is afgesproken.
+4. Ga naar `https://JOUW-SITE.netlify.app/beheer` en log in met dat account.
+5. **Verstandig om direct te doen:** wijzig via "Wachtwoord resetten" bij je
+   eigen account meteen het wachtwoord naar iets dat alleen jij kent — het
+   wachtwoord dat nu in dit gesprek is afgesproken, heeft in de chatgeschiedenis
+   gestaan en is dus niet meer als geheim te beschouwen.
+
 **Specifiek voor de update naar v3.2.0:** ook dit is een pure HTML-update
 (geen nieuwe Functions, geen nieuwe environment variables, geen nieuwe
 setup-link nodig). Alleen `index.html` uploaden en opnieuw deployen.

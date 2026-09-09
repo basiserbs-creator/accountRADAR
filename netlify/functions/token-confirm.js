@@ -4,6 +4,7 @@ const {
   getReservation, saveReservation,
   loadReservationIndex, saveReservationIndex
 } = require('./_tokens');
+const { logActivity } = require('./_activity');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -59,6 +60,8 @@ exports.handler = async (event) => {
 
   const idx = await loadReservationIndex(username);
   await saveReservationIndex(username, idx.filter((c) => c !== actionCode));
+
+  await logActivity({ username: username, klant: user.klant || null, actionType: r.actionType, tokens: finalTokens });
 
   return {
     statusCode: 200,

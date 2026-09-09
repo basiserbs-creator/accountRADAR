@@ -1,5 +1,15 @@
 # accountRADAR — changelog
 
+## v4.0.0 — 09-09-2026 (Fase 3 van het beveiligingsplan: beheerpagina)
+- **Beheerpagina toegevoegd** op `/beheer`: klanten/gebruikers aanmaken, saldo en billing_mode aanpassen, gebruikers blokkeren/deblokkeren, wachtwoorden resetten, en een activiteitenlog bekijken.
+- **Activiteitenlog**: registreert voortaan bij elke afgeschreven actie wie, welke actie, wanneer en hoeveel credits — uitsluitend metadata, nooit de inhoud van Excel-bestanden, zoekresultaten of exports.
+- **Accounteinddatum**: een account kan nu een optionele einddatum krijgen. Na die datum (actief tot en met 23:59:59, tijdzone Europe/Amsterdam) kan er niet meer worden ingelogd. Geen einddatum ingesteld = het account blijft actief.
+- **Blokkeren**: de beheerder kan een account blokkeren; een geblokkeerd account kan niet meer inloggen totdat het gedeblokkeerd wordt.
+- **Bewuste keuze — wachtwoordreset en sessies:** in overleg gekozen voor de eenvoudige variant. Een wachtwoordreset zorgt dat het *nieuwe* wachtwoord nodig is om opnieuw in te loggen, maar een sessie die al actief was (bv. nog ingelogd op een ander apparaat) loopt gewoon door tot die vanzelf verloopt of de gebruiker zelf uitlogt. Bij een sterk vermoeden van misbruik: ook het account blokkeren voor een directer effect.
+- Nieuwe Netlify Functions: `admin-list-users`, `admin-create-user`, `admin-update-user`, `admin-reset-password`, `admin-activity-log`, `setup-admin`, en gedeelde helpers `_admin.js`, `_activity.js`, `_accountdate.js`.
+- Nieuw bestand `beheer.html`, bereikbaar via de nette URL `/beheer` (via een redirect in `netlify.toml`).
+- Fase 3 hiermee afgerond — alle drie de fases uit het oorspronkelijke beveiligingsplan zijn nu gebouwd.
+
 ## v3.2.2 — 09-09-2026
 - Bugfix: als je op het Merk- of Expiratie-tabblad stond en op "Zoek bedrijven in deze regio" klikte, werden er wel resultaten gevonden maar was je niet op het tabblad waar prospects zichtbaar zijn (Account). De tool schakelt nu automatisch naar Account zodra je een zoekopdracht start.
 

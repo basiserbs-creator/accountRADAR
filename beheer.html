@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>accountRADAR — Beheer</title>
+<style>
+:root{
+  --km-blue:#0066B2;
+  --km-blue-dark:#004d87;
+  --bg:#f5f6f8;
+  --panel:#ffffff;
+  --border:#e2e2e2;
+  --text:#1a1a1a;
+  --text-muted:#6b6b6b;
+  --ok:#1E8A4C;
+  --err:#C0392B;
+  --warn:#a86a17;
+  --warn-bg:#fdf3e5;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);background:var(--bg);}
+a{color:var(--km-blue);}
+h1,h2,h3{margin:0 0 4px 0;}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 20px 60px;}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.topbar .brand{display:flex;align-items:center;gap:10px;}
+.topbar .brand .dot{width:14px;height:14px;border-radius:50%;background:var(--km-blue);}
+.topbar h1{font-size:19px;}
+.topbar .sub{font-size:12px;color:var(--text-muted);}
+#userInfo{font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:10px;}
+#userInfo a{cursor:pointer;text-decoration:underline;}
+
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:20px;}
+.card h2{font-size:15px;}
+.card .card-sub{font-size:12px;color:var(--text-muted);margin-bottom:14px;}
+
+.tabs{display:flex;gap:6px;margin-bottom:16px;}
+.tabbtn{padding:8px 14px;border-radius:8px;background:var(--panel);border:1px solid var(--border);cursor:pointer;font-size:13px;font-weight:600;color:var(--text-muted);}
+.tabbtn.active{background:var(--km-blue);border-color:var(--km-blue);color:#fff;}
+
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top;}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--text-muted);font-weight:600;}
+tr:last-child td{border-bottom:none;}
+.tablewrap{overflow-x:auto;}
+
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;}
+.badge-ok{background:#e8f5ec;color:var(--ok);}
+.badge-err{background:#fbe9e7;color:var(--err);}
+.badge-muted{background:#eee;color:var(--text-muted);}
+
+input, select{
+  padding:8px 10px;border:1px solid #ccc;border-radius:7px;font-size:13px;width:100%;
+}
+label{display:block;font-size:11px;font-weight:600;color:var(--text-muted);margin:8px 0 3px;}
+.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0 14px;}
+button{
+  padding:8px 14px;border-radius:8px;border:none;background:var(--km-blue);color:#fff;font-size:13px;font-weight:600;cursor:pointer;
+}
+button:hover{background:var(--km-blue-dark);}
+button.secondary{background:#eee;color:var(--text);}
+button.secondary:hover{background:#e2e2e2;}
+button.danger{background:#fbe9e7;color:var(--err);}
+button.danger:hover{background:#f6d6d1;}
+button:disabled{opacity:.55;cursor:default;}
+.rowbtns{display:flex;gap:6px;flex-wrap:wrap;}
+.rowbtns button{padding:5px 9px;font-size:12px;}
+
+.msg{margin-top:10px;padding:8px 12px;border-radius:8px;font-size:13px;}
+.msg-ok{background:#e8f5ec;color:var(--ok);}
+.msg-err{background:#fbe9e7;color:var(--err);}
+.msg-info{background:#eef5fb;color:var(--km-blue-dark);}
+
+#loginOverlay{
+  position:fixed;inset:0;z-index:10000;
+  background:linear-gradient(135deg, var(--km-blue-dark), var(--km-blue));
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+#loginOverlay.hidden{display:none;}
+#loginBox{background:#fff;border-radius:14px;padding:32px 28px;width:100%;max-width:340px;box-shadow:0 10px 40px rgba(0,0,0,.25);text-align:center;}
+#loginBox h1{font-size:19px;color:var(--km-blue-dark);}
+#loginBox p.sub{margin:0 0 20px 0;font-size:13px;color:var(--text-muted);}
+#loginBox label{text-align:left;}
+#loginBox button{width:100%;margin-top:18px;padding:11px;}
+#loginError{margin-top:12px;font-size:13px;color:var(--err);min-height:16px;}
+
+#accessDenied{display:none;text-align:center;padding:80px 20px;}
+#dashboard{display:none;}
+
+.hint{font-size:11px;color:var(--text-muted);margin:4px 0 0;}
+.section{display:none;}
+.section.active{display:block;}
+</style>
+</head>
+<body>
+
+<div id="loginOverlay">
+  <div id="loginBox">
+    <h1>accountRADAR — Beheer</h1>
+    <p class="sub">Log in met je beheeraccount</p>
+    <form id="loginForm">
+      <label for="loginUsername">Gebruikersnaam</label>
+      <input type="text" id="loginUsername" autocomplete="username" required>
+      <label for="loginPassword">Wachtwoord</label>
+      <input type="password" id="loginPassword" autocomplete="current-password" required>
+      <button type="submit" id="loginSubmitBtn">Inloggen</button>
+    </form>
+    <div id="loginError"></div>
+  </div>
+</div>
+
+<div id="accessDenied">
+  <h2>Geen toegang</h2>
+  <p>Dit account heeft geen beheerrechten voor deze pagina.</p>
+  <p><a id="backToTool" href="/">Terug naar accountRADAR</a></p>
+</div>
+
+<div id="dashboard">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand"><span class="dot"></span><h1>accountRADAR — Beheer</h1></div>
+      <div id="userInfo"><span id="userInfoName"></span><a id="btnLogout">Uitloggen</a> · <a href="/">Naar de tool</a></div>
+    </div>
+
+    <div class="tabs">
+      <div class="tabbtn active" data-section="secUsers">Gebruikers</div>
+      <div class="tabbtn" data-section="secLog">Activiteitenlog</div>
+    </div>
+
+    <div id="secUsers" class="section active">
+      <div class="card">
+        <h2>Nieuwe klant/gebruiker aanmaken</h2>
+        <p class="card-sub">Een klantcode/klantnaam mag meerdere gebruikers hebben — gebruik dezelfde klantnaam bij het aanmaken van een tweede gebruiker voor dezelfde klant.</p>
+        <form id="createUserForm">
+          <div class="formgrid">
+            <div>
+              <label for="cuUsername">Gebruikersnaam</label>
+              <input type="text" id="cuUsername" placeholder="bijv. ac12-jan" required>
+            </div>
+            <div>
+              <label for="cuKlant">Klant</label>
+              <input type="text" id="cuKlant" placeholder="bijv. AC12 - Bedrijfsnaam" required>
+            </div>
+            <div>
+              <label for="cuPassword">Wachtwoord (leeg = automatisch genereren)</label>
+              <input type="text" id="cuPassword" placeholder="optioneel">
+            </div>
+            <div>
+              <label for="cuBillingMode">Billing mode</label>
+              <select id="cuBillingMode">
+                <option value="normaal">Normaal (met saldo)</option>
+                <option value="onbeperkt">Onbeperkt</option>
+              </select>
+            </div>
+            <div>
+              <label for="cuStartBalance">Startsaldo (credits)</label>
+              <input type="number" id="cuStartBalance" value="250" min="0">
+            </div>
+            <div>
+              <label for="cuAccountEnd">Accounteinddatum (optioneel)</label>
+              <input type="date" id="cuAccountEnd">
+            </div>
+          </div>
+          <div style="margin-top:14px;"><button type="submit">Gebruiker aanmaken</button></div>
+        </form>
+        <div id="createUserMsg"></div>
+      </div>
+
+      <div class="card">
+        <h2>Bestaande gebruikers</h2>
+        <p class="card-sub">Wijzigingen (saldo, blokkeren, wachtwoord) zijn direct actief bij de eerstvolgende actie/login van die gebruiker.</p>
+        <div class="tablewrap">
+          <table id="usersTable">
+            <thead>
+              <tr>
+                <th>Gebruiker</th><th>Klant</th><th>Status</th><th>Billing</th><th>Saldo</th><th>Verbruik</th><th>Einddatum</th><th>Laatste login</th><th>Acties</th>
+              </tr>
+            </thead>
+            <tbody id="usersTbody"></tbody>
+          </table>
+        </div>
+        <div id="usersListMsg"></div>
+      </div>
+    </div>
+
+    <div id="secLog" class="section">
+      <div class="card">
+        <h2>Activiteitenlog</h2>
+        <p class="card-sub">Alleen metadata: gebruiker, actietype, tijdstip en creditkosten — nooit de inhoud van bestanden, zoekresultaten of exports.</p>
+        <button class="secondary" id="btnRefreshLog">Vernieuwen</button>
+        <div class="tablewrap" style="margin-top:12px;">
+          <table id="logTable">
+            <thead><tr><th>Tijdstip</th><th>Gebruiker</th><th>Klant</th><th>Actie</th><th>Credits</th></tr></thead>
+            <tbody id="logTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const loginOverlay = document.getElementById('loginOverlay');
+const loginForm = document.getElementById('loginForm');
+const loginError = document.getElementById('loginError');
+const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+const accessDenied = document.getElementById('accessDenied');
+const dashboard = document.getElementById('dashboard');
+const userInfoName = document.getElementById('userInfoName');
+
+const ACTION_LABELS = {
+  excel_koppelen: 'Excel-bestand koppelen',
+  google_search: 'Nieuwe bedrijven zoeken',
+  export: 'Aanvullingen exporteren',
+  contracten_tonen: 'Verlopend contract bekeken'
+};
+
+function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmtDateTime(ts){ if (!ts) return '—'; return new Date(ts).toLocaleString('nl-NL'); }
+function fmtDate(ts){ if (!ts) return '—'; return new Date(ts).toLocaleDateString('nl-NL'); }
+
+async function checkSession(){
+  try {
+    const res = await fetch('/.netlify/functions/session-check');
+    if (!res.ok){ loginOverlay.classList.remove('hidden'); return; }
+    const data = await res.json();
+    if (!data.isAdmin){
+      loginOverlay.classList.add('hidden');
+      accessDenied.style.display = 'block';
+      return;
+    }
+    loginOverlay.classList.add('hidden');
+    dashboard.style.display = 'block';
+    userInfoName.textContent = 'Ingelogd als ' + data.username;
+    loadUsers();
+  } catch(e){
+    loginOverlay.classList.remove('hidden');
+  }
+}
+
+loginForm.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  loginError.textContent = '';
+  loginSubmitBtn.disabled = true;
+  loginSubmitBtn.textContent = 'Bezig...';
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  try {
+    const res = await fetch('/.netlify/functions/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json().catch(()=>({}));
+    if (res.ok){
+      document.getElementById('loginPassword').value = '';
+      if (!data.isAdmin){
+        loginOverlay.classList.add('hidden');
+        accessDenied.style.display = 'block';
+      } else {
+        loginOverlay.classList.add('hidden');
+        dashboard.style.display = 'block';
+        userInfoName.textContent = 'Ingelogd als ' + data.username;
+        loadUsers();
+      }
+    } else {
+      loginError.textContent = data.error || 'Inloggen mislukt.';
+    }
+  } catch(e){
+    loginError.textContent = 'Kon geen verbinding maken met de server.';
+  } finally {
+    loginSubmitBtn.disabled = false;
+    loginSubmitBtn.textContent = 'Inloggen';
+  }
+});
+
+document.getElementById('btnLogout').addEventListener('click', async (e)=>{
+  e.preventDefault();
+  try { await fetch('/.netlify/functions/logout', { method:'POST' }); } catch(e){}
+  location.reload();
+});
+
+// tabs
+document.querySelectorAll('.tabbtn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tabbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(btn.getAttribute('data-section')).classList.add('active');
+    if (btn.getAttribute('data-section') === 'secLog') loadLog();
+  });
+});
+
+/* ============================================================
+   Gebruikers
+   ============================================================ */
+async function loadUsers(){
+  const msgEl = document.getElementById('usersListMsg');
+  try {
+    const res = await fetch('/.netlify/functions/admin-list-users');
+    const data = await res.json();
+    if (!res.ok){ msgEl.innerHTML = '<div class="msg msg-err">'+escapeHtml(data.error||'Kon gebruikers niet laden.')+'</div>'; return; }
+    renderUsers(data.users || []);
+    msgEl.innerHTML = '';
+  } catch(e){
+    msgEl.innerHTML = '<div class="msg msg-err">Kon gebruikers niet laden.</div>';
+  }
+}
+
+function renderUsers(users){
+  const tbody = document.getElementById('usersTbody');
+  tbody.innerHTML = '';
+  for (const u of users){
+    const tr = document.createElement('tr');
+    const statusBadge = u.active
+      ? '<span class="badge badge-ok">Actief</span>'
+      : '<span class="badge badge-err">Geblokkeerd</span>';
+    const lockedBadge = (u.lockedUntil && u.lockedUntil > Date.now())
+      ? ' <span class="badge badge-err">Vergrendeld</span>' : '';
+    const balanceText = u.billingMode === 'onbeperkt' ? '\u221e' : (u.balance + ' cr.');
+    tr.innerHTML =
+      '<td><b>'+escapeHtml(u.username)+'</b>'+(u.isAdmin?' <span class="badge badge-muted">beheerder</span>':'')+'</td>'+
+      '<td>'+escapeHtml(u.klant||'—')+'</td>'+
+      '<td>'+statusBadge+lockedBadge+'</td>'+
+      '<td>'+(u.billingMode==='onbeperkt'?'Onbeperkt':'Normaal')+'</td>'+
+      '<td>'+balanceText+'</td>'+
+      '<td>'+u.totalUsed+' cr.</td>'+
+      '<td>'+(u.accountEnd ? escapeHtml(u.accountEnd) : '—')+'</td>'+
+      '<td>'+fmtDateTime(u.lastLogin)+'</td>'+
+      '<td></td>';
+    const actionsTd = tr.lastElementChild;
+    const rowBtns = document.createElement('div');
+    rowBtns.className = 'rowbtns';
+
+    if (!u.isAdmin){
+      const balBtn = document.createElement('button');
+      balBtn.className = 'secondary'; balBtn.textContent = 'Saldo/instellingen';
+      balBtn.addEventListener('click', ()=>openEditUser(u));
+      rowBtns.appendChild(balBtn);
+
+      const blockBtn = document.createElement('button');
+      blockBtn.className = u.active ? 'danger' : 'secondary';
+      blockBtn.textContent = u.active ? 'Blokkeren' : 'Deblokkeren';
+      blockBtn.addEventListener('click', ()=>toggleActive(u));
+      rowBtns.appendChild(blockBtn);
+    }
+
+    const resetBtn = document.createElement('button');
+    resetBtn.className = 'secondary'; resetBtn.textContent = 'Wachtwoord resetten';
+    resetBtn.addEventListener('click', ()=>resetPassword(u));
+    rowBtns.appendChild(resetBtn);
+
+    actionsTd.appendChild(rowBtns);
+    tbody.appendChild(tr);
+  }
+}
+
+async function toggleActive(u){
+  const msgEl = document.getElementById('usersListMsg');
+  const res = await fetch('/.netlify/functions/admin-update-user', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ username: u.username, active: !u.active })
+  });
+  const data = await res.json().catch(()=>({}));
+  if (res.ok){
+    msgEl.innerHTML = '<div class="msg msg-ok">'+escapeHtml(u.username)+' is nu '+(u.active?'geblokkeerd':'gedeblokkeerd')+'.</div>';
+    loadUsers();
+  } else {
+    msgEl.innerHTML = '<div class="msg msg-err">'+escapeHtml(data.error||'Mislukt.')+'</div>';
+  }
+}
+
+async function resetPassword(u){
+  const msgEl = document.getElementById('usersListMsg');
+  const custom = prompt('Nieuw wachtwoord voor '+u.username+'? (leeg laten = automatisch genereren)', '');
+  if (custom === null) return; // geannuleerd
+  const res = await fetch('/.netlify/functions/admin-reset-password', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ username: u.username, newPassword: custom })
+  });
+  const data = await res.json().catch(()=>({}));
+  if (res.ok){
+    const shown = data.generatedPassword ? (' Nieuw wachtwoord: <b>'+escapeHtml(data.generatedPassword)+'</b> — noteer dit nu, het wordt niet opnieuw getoond.') : ' Wachtwoord is aangepast.';
+    msgEl.innerHTML = '<div class="msg msg-ok">Wachtwoord van '+escapeHtml(u.username)+' gereset.'+shown+'</div>';
+  } else {
+    msgEl.innerHTML = '<div class="msg msg-err">'+escapeHtml(data.error||'Mislukt.')+'</div>';
+  }
+}
+
+function openEditUser(u){
+  const msgEl = document.getElementById('usersListMsg');
+  const newBalance = u.billingMode === 'onbeperkt' ? null : prompt('Nieuw saldo voor '+u.username+' (huidig: '+u.balance+'):', u.balance);
+  if (u.billingMode !== 'onbeperkt' && newBalance === null) return; // geannuleerd
+  const newEnd = prompt('Accounteinddatum voor '+u.username+' (YYYY-MM-DD, leeg = geen einddatum):', u.accountEnd || '');
+  if (newEnd === null) return;
+
+  const body = { username: u.username, accountEnd: newEnd.trim() || null };
+  if (u.billingMode !== 'onbeperkt' && newBalance !== null) body.balance = Number(newBalance);
+
+  fetch('/.netlify/functions/admin-update-user', {
+    method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+  }).then(r=>r.json().then(data=>({ok:r.ok, data}))).then(({ok, data})=>{
+    if (ok){
+      msgEl.innerHTML = '<div class="msg msg-ok">'+escapeHtml(u.username)+' bijgewerkt.</div>';
+      loadUsers();
+    } else {
+      msgEl.innerHTML = '<div class="msg msg-err">'+escapeHtml(data.error||'Mislukt.')+'</div>';
+    }
+  }).catch(()=>{ msgEl.innerHTML = '<div class="msg msg-err">Kon niet opslaan.</div>'; });
+}
+
+document.getElementById('createUserForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const msgEl = document.getElementById('createUserMsg');
+  const body = {
+    username: document.getElementById('cuUsername').value.trim(),
+    klant: document.getElementById('cuKlant').value.trim(),
+    password: document.getElementById('cuPassword').value.trim(),
+    billingMode: document.getElementById('cuBillingMode').value,
+    startBalance: document.getElementById('cuStartBalance').value,
+    accountEnd: document.getElementById('cuAccountEnd').value || null
+  };
+  try {
+    const res = await fetch('/.netlify/functions/admin-create-user', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+    });
+    const data = await res.json().catch(()=>({}));
+    if (res.ok){
+      const shown = data.generatedPassword ? (' Wachtwoord: <b>'+escapeHtml(data.generatedPassword)+'</b> — noteer dit nu, het wordt niet opnieuw getoond.') : '';
+      msgEl.innerHTML = '<div class="msg msg-ok">Gebruiker "'+escapeHtml(data.username)+'" aangemaakt.'+shown+'</div>';
+      document.getElementById('createUserForm').reset();
+      document.getElementById('cuStartBalance').value = 250;
+      loadUsers();
+    } else {
+      msgEl.innerHTML = '<div class="msg msg-err">'+escapeHtml(data.error||'Aanmaken mislukt.')+'</div>';
+    }
+  } catch(e){
+    msgEl.innerHTML = '<div class="msg msg-err">Kon geen verbinding maken met de server.</div>';
+  }
+});
+
+/* ============================================================
+   Activiteitenlog
+   ============================================================ */
+async function loadLog(){
+  const tbody = document.getElementById('logTbody');
+  tbody.innerHTML = '<tr><td colspan="5">Laden...</td></tr>';
+  try {
+    const res = await fetch('/.netlify/functions/admin-activity-log?limit=200');
+    const data = await res.json();
+    if (!res.ok){ tbody.innerHTML = '<tr><td colspan="5">'+escapeHtml(data.error||'Kon log niet laden.')+'</td></tr>'; return; }
+    const log = data.log || [];
+    if (!log.length){ tbody.innerHTML = '<tr><td colspan="5">Nog geen activiteit geregistreerd.</td></tr>'; return; }
+    tbody.innerHTML = log.map(entry =>
+      '<tr><td>'+fmtDateTime(entry.timestamp)+'</td><td>'+escapeHtml(entry.username||'—')+'</td><td>'+escapeHtml(entry.klant||'—')+'</td><td>'+escapeHtml(ACTION_LABELS[entry.actionType]||entry.actionType||'—')+'</td><td>'+(entry.tokens!=null?entry.tokens:'—')+'</td></tr>'
+    ).join('');
+  } catch(e){
+    tbody.innerHTML = '<tr><td colspan="5">Kon log niet laden.</td></tr>';
+  }
+}
+document.getElementById('btnRefreshLog').addEventListener('click', loadLog);
+
+checkSession();
+</script>
+</body>
+</html>
