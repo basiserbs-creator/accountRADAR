@@ -1,5 +1,9 @@
 # accountRADAR — changelog
 
+## v3.2.1 — 09-09-2026
+- De kostenmelding bij "Nieuwe bedrijven vinden" vereenvoudigd naar "Dit kost 10 credits plus 2 credits per resultaat." De eerder berekende "maximaal X credits"/"je kunt maximaal Y resultaten ophalen" klopten niet meer zodra caching meespeelde en zijn verwijderd.
+- Het veld "Maximaal aantal resultaten" laat nu nooit meer invullen dan je huidige saldo daadwerkelijk toelaat (bijv. bij 100 credits kan er niet meer dan 45 ingevuld worden). Bij onbeperkt saldo blijft de algemene grens van 60 gelden.
+
 ## v3.2.0 — 09-09-2026
 - Verlopende contracten bekijken kost nu 1 credit per pin die je daadwerkelijk aanklikt op het Expiratie-tabblad (maximaal 1x per contract per sessie), in plaats van in één keer voor alle zichtbare contracten bij het wisselen naar dat tabblad.
 - **Bugfix:** postcode invullen had geen effect op de actieradius/prospecting-locatie. De postcode-zoekopdracht gebruikt nu het juiste locatietype (`type:postcode`), met een terugvalzoekopdracht als die niets vindt.
