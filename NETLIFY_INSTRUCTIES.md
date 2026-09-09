@@ -92,6 +92,10 @@ via de server werken zonder dat je ergens een sleutel hoeft in te vullen.
 
 ## Daarna: updates doorvoeren
 
+**Specifiek voor de update naar v3.2.0:** ook dit is een pure HTML-update
+(geen nieuwe Functions, geen nieuwe environment variables, geen nieuwe
+setup-link nodig). Alleen `index.html` uploaden en opnieuw deployen.
+
 **Specifiek voor de update naar v3.1.0:** dit is een pure HTML/tekst-update
 (geen nieuwe Functions, geen nieuwe environment variables). Upload alleen het
 nieuwe `index.html` naar je GitHub-repository (overschrijft het bestaande

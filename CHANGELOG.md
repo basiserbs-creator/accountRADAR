@@ -1,5 +1,12 @@
 # accountRADAR — changelog
 
+## v3.2.0 — 09-09-2026
+- Verlopende contracten bekijken kost nu 1 credit per pin die je daadwerkelijk aanklikt op het Expiratie-tabblad (maximaal 1x per contract per sessie), in plaats van in één keer voor alle zichtbare contracten bij het wisselen naar dat tabblad.
+- **Bugfix:** postcode invullen had geen effect op de actieradius/prospecting-locatie. De postcode-zoekopdracht gebruikt nu het juiste locatietype (`type:postcode`), met een terugvalzoekopdracht als die niets vindt.
+- **Bugfix:** als een identieke zoekopdracht binnen 36 uur uit cache kwam maar je zette het maximum aantal resultaten hoger, werd er niets bijgezocht. Nu wordt alleen het verschil bijgezocht, en ook alleen daarvoor credits gerekend (2 per extra resultaat, geen dubbele basisprijs van 10). Exporteren blijft, zoals altijd, gewoon 1 credit per resultaat kosten, ongeacht of de onderliggende zoekopdracht gratis (cache) of betaald was.
+- **Bugfix:** het bestandsveld kon na een herlaad van de pagina nog een oude bestandsnaam tonen, terwijl de data zelf (bewust, om AVG-redenen) niet bewaard blijft. Het veld wordt nu bij elke herlaad leeggemaakt.
+- Titels "Bestand" en "Zoeken & locatie" zijn nu net zo vet weergegeven als de andere bloktitels.
+
 ## v3.1.0 — 09-09-2026
 - Het tegoed heet nu overal "credits" in plaats van "tokens" (in de tool zelf; de Netlify Functions heten intern nog steeds `token-*`, dat ziet de gebruiker niet).
 - Een identieke zoekopdracht naar nieuwe bedrijven (zelfde regio + zelfde zoektermen) binnen 36 uur wordt gratis uit cache getoond, zonder opnieuw credits te kosten.
