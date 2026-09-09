@@ -1,5 +1,16 @@
 # accountRADAR — changelog
 
+## v3.0.0 — 09-09-2026 (Fase 2 van het beveiligingsplan: tokensysteem)
+- **Tokensysteem toegevoegd.** Elke gebruiker heeft een saldo (zichtbaar bovenaan de zijbalk), of `billing_mode: onbeperkt` voor gebruikers zonder saldolimiet.
+- Kosten per actie: Excel-bestand koppelen 10 tokens (vast), zoekopdracht naar nieuwe bedrijven 10 + 2 tokens per resultaat (met een instelbaar maximum aantal resultaten en een kostenindicatie vooraf), aanvullingen exporteren 1 token per resultaat, verlopende contracten bekijken (Expiratie-tabblad) 1 token per getoond contract.
+- Reserveren-dan-afschrijven: tokens worden vooraf gereserveerd, pas na een succesvolle actie definitief afgeschreven. Bij een fout (bijv. een onleesbaar Excel-bestand of een verlopen sessie tijdens het zoeken) wordt de reservering teruggegeven — geen kosten.
+- Niet-afgeronde reserveringen (bijv. door een gesloten browser) worden na 10 minuten automatisch vrijgegeven.
+- Bij onvoldoende saldo wordt een actie geblokkeerd met een duidelijke melding. Uitzondering: het bekijken van al lokaal geladen gegevens (het Expiratie-tabblad) wordt nooit geblokkeerd — dat wordt alleen niet als verbruik geregistreerd bij te weinig saldo.
+- Nieuwe Netlify Functions: `token-balance`, `token-reserve`, `token-confirm`, `token-release`, en een gedeelde `_tokens.js`-helper.
+- **Belangrijke kanttekening (bewust, passend bij deze schaal):** saldo-updates gebeuren als eenvoudige lees-pas aan-schrijf terug, niet met een echte databasetransactie. Bij een paar bekende gebruikers is de kans op een botsing verwaarloosbaar; bij een grotere, drukkere gebruikersgroep zou dit met een "echte" database herzien moeten worden.
+- Export en "verlopende contracten getoond" blijven — zoals in het oorspronkelijke plan al benoemd — op vertrouwen geregistreerd: deze gebeuren volledig lokaal in de browser en kunnen door de server niet geverifieerd worden.
+- `setup-users.js` uitgebreid: testgebruiker1 = onbeperkt, testgebruiker2 en testgebruiker3 = normaal met een startsaldo van 250 tokens. Bestaande testgebruikers moeten opnieuw via de setup-link aangemaakt worden (dit overschrijft hun saldo en verbruik naar de startwaarden).
+
 ## v2.0.0 — 09-09-2026 (Fase 1 van het beveiligingsplan)
 - **Login toegevoegd.** De tool is vanaf nu pas bruikbaar na inloggen met een gebruikersnaam en wachtwoord. Wachtwoorden worden veilig gehasht (bcrypt, cost 12) opgeslagen — nooit leesbaar, ook niet voor de beheerder.
 - Na 3 mislukte inlogpogingen volgt een blokkade van 10 minuten op dat account.

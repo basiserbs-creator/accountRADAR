@@ -92,6 +92,23 @@ via de server werken zonder dat je ergens een sleutel hoeft in te vullen.
 
 ## Daarna: updates doorvoeren
 
+**Specifiek voor de update naar v3.0.0 (tokensysteem):** de environment
+variables van Fase 1 (`SESSION_SECRET`, `GOOGLE_PLACES_API_KEY`,
+`SETUP_SECRET`, `BLOBS_SITE_ID`, `BLOBS_TOKEN`) blijven ongewijzigd — die
+hoef je niet opnieuw in te stellen. Wel nodig:
+1. Upload alle bestanden uit deze nieuwe `netlify_package_v3`-map naar je
+   GitHub-repository (overschrijft de bestaande bestanden, inclusief de
+   nieuwe map `netlify/functions/token-*.js` en `_tokens.js`).
+2. Trigger een nieuwe deploy (Deploys → Trigger deploy → Deploy site).
+3. Open opnieuw de setup-users-link
+   (`.../.netlify/functions/setup-users?secret=...`). Dit zet de drie
+   testgebruikers terug naar hun startwaarden: testgebruiker1 onbeperkt,
+   testgebruiker2 en testgebruiker3 met 250 tokens. **Let op:** als je al met
+   deze accounts had getest, wordt hun eventueel gewijzigde/verbruikte saldo
+   hierdoor teruggezet naar 250.
+4. Log in en controleer bovenaan de zijbalk of het saldo zichtbaar is
+   (oneindig-teken bij testgebruiker1, "250 tokens" bij de andere twee).
+
 Voor toekomstige aanpassingen (nieuwe versie van `index.html`, of wijzigingen
 aan de Functions): vervang de bestanden in je GitHub-repository (via dezelfde
 "upload files"-knop, of door het bestaande bestand te openen en te bewerken via

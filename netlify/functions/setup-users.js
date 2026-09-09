@@ -8,9 +8,9 @@ const bcrypt = require('bcryptjs');
 const { usersStore } = require('./_store');
 
 const TEST_USERS = [
-  { username: 'testgebruiker1', password: 'Radar4721!', klant: 'Testklant' },
-  { username: 'testgebruiker2', password: 'Kompas3098#', klant: 'Testklant' },
-  { username: 'testgebruiker3', password: 'Anker6650@', klant: 'Testklant' }
+  { username: 'testgebruiker1', password: 'Radar4721!', klant: 'Testklant', billingMode: 'onbeperkt' },
+  { username: 'testgebruiker2', password: 'Kompas3098#', klant: 'Testklant', billingMode: 'normaal', startBalance: 250 },
+  { username: 'testgebruiker3', password: 'Anker6650@', klant: 'Testklant', billingMode: 'normaal', startBalance: 250 }
 ];
 
 exports.handler = async (event) => {
@@ -29,7 +29,11 @@ exports.handler = async (event) => {
       klant: u.klant,
       failedAttempts: 0,
       lockedUntil: null,
-      lastLogin: null
+      lastLogin: null,
+      billingMode: u.billingMode,
+      balance: u.billingMode === 'normaal' ? u.startBalance : null,
+      startBalance: u.billingMode === 'normaal' ? u.startBalance : null,
+      totalUsed: 0
     }));
     created.push(u.username);
   }
