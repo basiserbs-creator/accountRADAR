@@ -5,7 +5,7 @@
 // om te laten staan.
 
 const bcrypt = require('bcryptjs');
-const { getStore } = require('@netlify/blobs');
+const { usersStore } = require('./_store');
 
 const TEST_USERS = [
   { username: 'testgebruiker1', password: 'Radar4721!', klant: 'Testklant' },
@@ -19,7 +19,7 @@ exports.handler = async (event) => {
     return { statusCode: 403, body: 'Verboden.' };
   }
 
-  const store = getStore('accountradar-users');
+  const store = usersStore();
   const created = [];
 
   for (const u of TEST_USERS) {

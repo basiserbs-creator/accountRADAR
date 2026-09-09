@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const { getStore } = require('@netlify/blobs');
+const { usersStore } = require('./_store');
 const { makeSessionCookie } = require('./_auth');
 
 const MAX_ATTEMPTS = 3;
@@ -25,7 +25,7 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: 'Gebruikersnaam en wachtwoord zijn verplicht.' }) };
   }
 
-  const store = getStore('accountradar-users');
+  const store = usersStore();
   const userJson = await store.get(username);
 
   if (!userJson) {
