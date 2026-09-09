@@ -1,0 +1,15 @@
+{
+  "name": "accountRADAR",
+  "short_name": "accountRADAR",
+  "description": "Klantenkaart en prospecting-tool voor accountbeheer.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f5f6f8",
+  "theme_color": "#0066B2",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

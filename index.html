@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>accountRADAR</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0066B2">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="accountRADAR">
+<link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABgUlEQVR4nI2Tv07CUBTGv0tIZPAfMaaJDJUFBhM2oJg0jji07vgAZSEw+ACWR9DgYtx9gHaATeIgaOLA1i6GQUkHMERDwH84NOemlAp+S3vOud+5v9t7yhAgpdae0vvn9w/PNyo55l87l1Bq7anZcXic39ueqfub8IB2JXMhHQMADEYfQZC8UdibNDsON14/PAcSBB6BsE+VBC/0hhMAQHcw+tPcqORY2H9m0uVtdylB/uxuGqKgkI6hatroDSeomvZCbK9CyxbUy9LCOlNq7enb+As7GxG8DMdICquwnHcAwM3JPl94eN4CAOhqkud0w3IJmnYf/mfT7oMVDXeXooF6WUK9LEE3LEjxKHTDgq4mXQLv3a9F3Julj3iQ2ELT7kOTRSgpAWpK4AStp1eEzFKWKZ4kSZNFaLKIpLAKTRZ5w+OrRwCAenEPKR41ZibR7DjQZDGQgAaskIlBWF9BZnfTYIwdLR1lEk0m0ZqlLAP+8TMRAZnJSJpr4KXxy28GgF/yuKV9S96HqgAAAABJRU5ErkJggg==">
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACMElEQVR4nM2XP0/cMBjGHyO2siBUZciAuuSGSixVdNcBMR5D7vZ8AbKc6EeADnwAKjrAXIkP4AwwAgMFJIbbYIJKDDe0aqWqQ6uSTnZtx6/tpKnaRzrJ/+6eX948dnLAPxZr+oVs76JS+z9+Pmrzx69eNvrN4MXCuJzOtPHh86fW9aEg3kWUsQ8gFMQ5me1dVJRxKIAPgpxwmedpLNufvn33ArggrIOUuTA+vHqQYyEVcEHUBmzmNuM2ADYIrUOZ24zbApgQc66FW1mCJHqCrSypzW2sLmNjdbmxual50QhJvDAGgIOzewDtKjDcPa9EFeapRXka43V5WzMXxl1pDgi7+q7Nh7vnlQQw5Qtel3KGUIi6+mp/hKPNwd8HsKnaH8n2n0DIEK4lS9qEr9+VJMDJ7Uc5mKex1u9FC1ofAFjBZRXU9vqb9+0AXDo4u7fmgBVcVoYVHABIkO1R73eb38i2NQOHVw/aE6+JWMFRvJviaHMgs7E96mHwbFF+VBh5JptngW0r2qqwlixpt8dco4bVEGeMjcldYKuCuBW2Z4AYNwGvP3yhLAAoGSgnfUadiOr5LwxUiF600PqUdJ4DriwImJvZV9I8T2O82DkFr18UZ4yNawDlpM+ylagG0VR5GmsZGr+9BJ/OcHn3WTMHOnglU0PoenPKViKUk77/lcwHoRqZoqpFmTsBfBBC5jZsYu4FEBAA/ceEAhBZcpkHAfhATIBQ48YAJgilUOP/Rr8AWlMrLQ/ROwcAAAAASUVORK5CYII=">
+<link rel="icon" type="image/png" sizes="48x48" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAADHklEQVR4nO2aPW/TQBzGHyMkkKhQoUIZMgQYkgGpW5N0iDqWwc5ePkAytCofoeEjgJqhFXv3OEMZUQdoKjF0a7YMHTLQBVEh3szC35zt893/zi9h6DNd7s3Pz/fquwA3WqycPCtz90+DeNyPX78T+d69XM/tuZkrEk2Pz+eJ9M1nj5Tls8JYFybjMtOidAAkWxDjQlzjJC4AyRTEKLO7fxpwjZNMAQAziFvcjDbmbbX5+kNiMkgTi9TE/NZaNfL76vo710tCnJbQZuCYF00fnV1G0my6kCgdhDKRaz5uWlRWAEANkZqgM09vXWUeyAcASIeQRnLM64yT8gIA5BDsWYi059bZ5stQgkj19vfcehh+NZ6mVtrr1MLw7Oo6i7+E4q1w26TwdP4V9cq9VPNk/PBkFsbl2YVkitCo3r6u3/c6tYhxUhEAYiuwxoCt+TJkPIjjWqR5QACw2essyry4V9K2gMmcvwhZd6FFdx1S5jGgUnDg4Xi3XeQjigMIDrwwXCREZCHbqK9IM5nGl6kIwPvp50SGrbWqNL5RWZLGk5y+H7aCGH7+5mMmw3EZbSVM5fT9sJWcvg8AuYNYAxyezKxmIhOQgdeI/vYvEnm0AEdnl4WsBTqQgddIGJbFsTZzKgBdK2zUV1LHilhWBBGN0gxGgAOvgfWnD802cypRVzJVHNzp+3D6Po5322g/eQAgOv1SeOBfIAiCEcWzAKgbpckUQtVq/vkcL95+kq4dsrgIwHin5birFWnFXAgVCKWrulx1+a5yvGX6ItOJjMUhGpWlSDpH4tpB8oaTZD5ZYc6XGXcKVQ3itLpH2010/5olCG84wXin5QRBMHIcp0tljAcxmQeSbzqLxJmuO5xgtN0E8G9wA0DcPJDhYKvXqeHLt5/a9UHXAqoDMoKo3L+D5uNlP24eKOFoUQXAWSDd1QrGOy3zo8WwgoyHu3EAVd7EszXmgRKO1+Pibkk45gGDGxrbCw6TWSh8FtM8YDALqRa5PGViHijhko/bAvRyTMwDJVyz6gBsjZMKv+iWAYhd0dY4qfC/GsiU1fSN/if9ASAPy6PswzK4AAAAAElFTkSuQmCC">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --km-blue:#0066B2;
+  --km-blue-dark:#004d87;
+  --canon-red:#D2232A;
+  --xerox-green:#1E8A4C;
+  --fuji-orange:#FE5000;
+  --ricoh-black:#000000;
+  --prospect-color:#E8A33D;
+  --former-color:#8A8A8A;
+  --exp-safe:#1E8A4C;
+  --exp-mid:#E8A33D;
+  --exp-urgent:#C0392B;
+  --exp-expired:#7A1010;
+  --bg:#f5f6f8;
+  --panel:#ffffff;
+  --border:#e2e2e2;
+  --text:#1a1a1a;
+  --text-muted:#6b6b6b;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;height:100%;width:100%;overflow:hidden;overscroll-behavior:none;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);}
+#app{display:flex;height:100vh;height:100dvh;width:100vw;overflow:hidden;}
+#sidebar{width:340px;min-width:340px;background:var(--panel);border-right:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column;}
+#sidebarScroll{flex:1;min-height:0;overflow-y:auto;}
+#mapWrap{flex:1;height:100%;position:relative;}
+#map{width:100%;height:100%;}
+.sb-header-slim{padding:12px 16px;border-bottom:1px solid var(--border);}
+.sb-header-slim .sub{font-size:12px;color:var(--text-muted);margin:0;}
+#mapTopBar{
+  position:absolute;top:14px;left:70px;right:14px;z-index:1200;
+  display:flex;justify-content:space-between;align-items:center;gap:38px;
+}
+.privacy-banner{
+  background:rgba(255,255,255,0.88);border-radius:10px;
+  padding:9px 16px;font-size:11.5px;line-height:1.4;color:var(--text-secondary);
+  box-shadow:0 2px 8px rgba(0,0,0,.12);border:1px solid var(--border);
+  max-width:520px;
+}
+#mapLogo{
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+  background:rgba(255,255,255,0.94);border-radius:12px;
+  padding:6px 8px 6px 14px;box-shadow:0 2px 10px rgba(0,0,0,.18);
+  border:1px solid var(--border);
+}
+#mapLogo .textcol{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
+#mapLogo img{width:92px;height:92px;flex-shrink:0;display:block;}
+#mapLogo .name{font-size:14px;font-weight:700;color:var(--text);white-space:nowrap;}
+#mapLogo .name .hl{color:var(--km-blue);}
+#mapLogo .ver{font-size:10px;color:#fff;background:var(--km-blue);padding:1px 6px;border-radius:9px;}
+.block{border-bottom:1px solid var(--border);padding:14px 16px;}
+.block-title{font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.block-title .car{transition:transform .15s;font-size:11px;color:var(--text-muted);}
+.block.collapsed .block-body{display:none;}
+.block.collapsed .car{transform:rotate(-90deg);}
+.block-body{margin-top:10px;}
+label{font-size:12px;color:var(--text-muted);display:block;margin:8px 0 4px 0;}
+input[type=text],input[type=password],input[type=file],input[type=url]{
+  width:100%;padding:7px 9px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:#fff;color:var(--text);
+}
+input[type=range]{width:100%;accent-color:var(--km-blue);}
+button{
+  font-family:inherit;cursor:pointer;border:none;border-radius:6px;font-size:13px;padding:8px 12px;
+}
+.btn-primary{background:var(--km-blue);color:#fff;width:100%;}
+.btn-primary:hover{background:var(--km-blue-dark);}
+.btn-secondary{background:#eef1f4;color:var(--text);width:100%;}
+.btn-secondary:hover{background:#e2e6ea;}
+.btn-small{background:#eef1f4;color:var(--text);font-size:12px;padding:5px 9px;}
+.small-link{font-size:12px;color:var(--km-blue);cursor:pointer;text-decoration:none;display:inline-block;margin-top:6px;}
+.small-link:hover{text-decoration:underline;}
+.tabs{display:flex;gap:4px;background:#eef1f4;padding:3px;border-radius:8px;margin-bottom:10px;}
+.tab{flex:1;text-align:center;padding:7px 4px;font-size:12px;font-weight:600;border-radius:6px;cursor:pointer;color:var(--text-muted);}
+.tab.active{background:var(--km-blue);color:#fff;}
+.filter-group-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;color:var(--text-muted);margin:10px 0 6px 0;}
+.filter-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px;}
+.filter-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--km-blue);flex-shrink:0;}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.filter-row .flabel{flex:1;color:var(--text);}
+.filter-row .fcount{font-size:11px;color:var(--text-muted);background:#eef1f4;padding:1px 7px;border-radius:10px;}
+.progress-wrap{margin-top:8px;}
+.progress-bar-bg{width:100%;height:6px;background:#eef1f4;border-radius:4px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--km-blue);width:0%;transition:width .2s;}
+.progress-text{font-size:11px;color:var(--text-muted);margin-top:4px;}
+.hint{font-size:12px;color:var(--text-muted);line-height:1.5;margin:4px 0 8px 0;}
+.api-key-compact{margin-top:10px;opacity:0.75;}
+.api-key-compact label{font-size:10.5px;margin:0 0 3px 0;}
+.api-key-compact .opt{color:#a8adb3;}
+.api-key-compact input{padding:5px 8px;font-size:11.5px;}
+.status-msg{font-size:12px;padding:8px 10px;border-radius:6px;margin-top:8px;}
+.status-ok{background:#e8f5ec;color:#1E8A4C;}
+.status-err{background:#fdecec;color:#C0392B;}
+.status-info{background:#eaf2fa;color:var(--km-blue);}
+.count-pill{display:inline-block;background:var(--km-blue);color:#fff;font-size:11px;padding:1px 8px;border-radius:10px;margin-left:6px;}
+.additions-summary{font-size:13px;margin-bottom:8px;}
+.additions-summary b{color:var(--km-blue);}
+.changelog-locked{font-size:12px;}
+.changelog-locked input{padding:5px 8px;font-size:12px;}
+.changelog-locked button{padding:5px 10px;font-size:12px;}
+.changelog-body{font-size:11px;color:var(--text-muted);max-height:220px;overflow-y:auto;}
+.changelog-body h4{margin:8px 0 3px 0;color:var(--text);font-size:11px;}
+.changelog-body ul{margin:0 0 6px 0;padding-left:14px;}
+.block-subtle{padding:8px 16px;}
+.block-subtle .block-title{font-size:11px;color:var(--text-muted);font-weight:500;}
+.block-subtle .block-title .car{font-size:9px;}
+.block-subtle .block-title .opt{color:#b0b4b9;}
+/* popup */
+.leaflet-popup-content-wrapper{border-radius:10px;}
+.arp{min-width:240px;max-width:280px;font-size:13px;}
+.arp h3{margin:0 0 6px 0;font-size:15px;}
+.arp .badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
+.arp .badge{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:10px;display:inline-block;}
+.arp .badge-type{background:#eaf2fa;color:var(--km-blue);}
+.arp .badge-exp-safe{background:#e8f5ec;color:var(--exp-safe);}
+.arp .badge-exp-mid{background:#fdf3e5;color:#a86a17;}
+.arp .badge-exp-urgent{background:#fbe9e7;color:var(--exp-urgent);}
+.arp .badge-exp-expired{background:#f6dede;color:var(--exp-expired);}
+.arp a{color:var(--km-blue);text-decoration:none;}
+.arp a:hover{text-decoration:underline;}
+.arp .field{margin:3px 0;}
+.arp .field .lbl{color:var(--text-muted);font-size:11px;}
+.arp .addr-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.arp .addr-link{flex:1;min-width:0;}
+.arp .map-icon{
+  flex-shrink:0;width:15px;height:15px;border-radius:50%;font-size:9px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;line-height:1;
+}
+.arp .map-icon.g{background:#4285F4;}
+.arp .map-icon.w{background:#33CCFF;}
+.arp hr{border:none;border-top:1px solid var(--border);margin:8px 0;}
+.arp .mach-hdr{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--text-muted);margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;}
+.arp .mach-item{margin:5px 0;padding-bottom:5px;border-bottom:1px dashed var(--border);font-size:12px;}
+.arp .mach-item:last-child{border-bottom:none;}
+.arp .add-btn{background:var(--km-blue);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:13px;line-height:1;cursor:pointer;}
+.arp .add-form{margin-top:6px;padding:8px;background:#f5f6f8;border-radius:6px;}
+.arp .add-form input{margin-bottom:5px;}
+.arp .approx-note{font-size:10.5px;color:#a86a17;background:#fdf3e5;padding:3px 7px;border-radius:5px;margin-bottom:6px;display:inline-block;}
+.glow-marker{animation:arglow 1.8s ease-in-out infinite;}
+@keyframes arglow{
+  0%{box-shadow:0 1px 3px rgba(0,0,0,.35), 0 0 0px 0px currentColor;}
+  50%{box-shadow:0 1px 3px rgba(0,0,0,.35), 0 0 9px 3px currentColor;}
+  100%{box-shadow:0 1px 3px rgba(0,0,0,.35), 0 0 0px 0px currentColor;}
+}
+#toast-wrap{position:fixed;bottom:16px;left:356px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
+.toast{background:#1a1a1a;color:#fff;padding:9px 14px;border-radius:7px;font-size:12.5px;box-shadow:0 3px 10px rgba(0,0,0,.15);opacity:0;transform:translateY(6px);transition:all .25s;}
+.toast.show{opacity:1;transform:translateY(0);}
+::-webkit-scrollbar{width:8px;}
+::-webkit-scrollbar-thumb{background:#d4d7db;border-radius:4px;}
+#sidebarToggle{
+  display:none;position:fixed;top:80px;left:14px;z-index:1500;
+  width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid var(--border);
+  box-shadow:0 2px 8px rgba(0,0,0,.18);align-items:center;justify-content:center;
+  font-size:19px;cursor:pointer;color:var(--text);
+}
+#sidebarCloseBtn{
+  display:none;background:none;border:none;font-size:18px;color:var(--text-muted);cursor:pointer;
+  width:28px;height:28px;align-items:center;justify-content:center;flex-shrink:0;
+}
+@media (max-width:1280px){
+  #sidebar{
+    position:fixed;top:0;left:0;height:100vh;height:100dvh;width:85vw;max-width:340px;min-width:0;
+    transform:translateX(-100%);transition:transform .25s ease;z-index:2000;
+    box-shadow:2px 0 16px rgba(0,0,0,.25);
+  }
+  #sidebar.open{transform:translateX(0);}
+  #mapWrap{width:100%;height:100%;}
+  #sidebarToggle{display:flex;}
+  #sidebarCloseBtn{display:flex;}
+  #toast-wrap{left:16px;}
+}
+/* ============================================================
+   Login-overlay (v2.0.0)
+   ============================================================ */
+#loginOverlay{
+  position:fixed; inset:0; z-index:10000;
+  background:linear-gradient(135deg, var(--km-blue-dark), var(--km-blue));
+  display:flex; align-items:center; justify-content:center;
+  padding:20px;
+}
+#loginOverlay.hidden{ display:none; }
+#loginBox{
+  background:#fff; border-radius:14px; padding:32px 28px; width:100%; max-width:340px;
+  box-shadow:0 10px 40px rgba(0,0,0,.25); text-align:center;
+}
+#loginBox h1{ font-size:19px; margin:0 0 4px 0; color:var(--km-blue-dark); }
+#loginBox p.sub{ margin:0 0 20px 0; font-size:13px; color:var(--text-muted,#666); }
+#loginBox label{ display:block; text-align:left; font-size:12px; font-weight:600; margin:12px 0 4px; color:#333; }
+#loginBox input{
+  width:100%; padding:10px 12px; border:1px solid #ccc; border-radius:8px; font-size:15px; box-sizing:border-box;
+}
+#loginBox button{
+  width:100%; margin-top:18px; padding:11px; border:none; border-radius:8px; background:var(--km-blue);
+  color:#fff; font-size:15px; font-weight:600; cursor:pointer;
+}
+#loginBox button:disabled{ opacity:.6; cursor:default; }
+#loginBox button:hover:not(:disabled){ background:var(--km-blue-dark); }
+#loginError{ margin-top:12px; font-size:13px; color:#C0392B; min-height:16px; }
+#app.app-locked{ pointer-events:none; }
+#userBadge{ font-size:11px; color:var(--text-muted,#888); display:flex; align-items:center; gap:6px; }
+#userBadge a{ color:var(--km-blue); cursor:pointer; text-decoration:underline; }
+</style>
+</head>
+<body>
+<div id="loginOverlay">
+  <div id="loginBox">
+    <h1>accountRADAR</h1>
+    <p class="sub">Log in om verder te gaan</p>
+    <form id="loginForm">
+      <label for="loginUsername">Gebruikersnaam</label>
+      <input type="text" id="loginUsername" autocomplete="username" required>
+      <label for="loginPassword">Wachtwoord</label>
+      <input type="password" id="loginPassword" autocomplete="current-password" required>
+      <button type="submit" id="loginSubmitBtn">Inloggen</button>
+    </form>
+    <div id="loginError"></div>
+  </div>
+</div>
+<div id="app" class="app-locked">
+  <button id="sidebarToggle" aria-label="Menu openen">&#9776;</button>
+  <aside id="sidebar">
+   <div id="sidebarScroll">
+    <div class="sb-header-slim" style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+      <p class="sub" id="loadedCountText" style="margin:0;">Geen bestand geladen</p>
+      <button id="sidebarCloseBtn" aria-label="Menu sluiten">&#10005;</button>
+    </div>
+    <div id="userBadge">
+      <span id="userBadgeName"></span>
+      <a id="btnLogout">Uitloggen</a>
+    </div>
+
+    <div class="block" id="blockFile">
+      <div class="block-title" data-block="blockFile"><span style="color:var(--text-muted);font-weight:500;font-size:12px;">Bestand</span><span class="car">&#9660;</span></div>
+      <div class="block-body">
+        <label for="fileInput">Excel-bestand uploaden (.xlsx/.xls)</label>
+        <input type="file" id="fileInput" accept=".xlsx,.xls">
+        <p class="hint" style="margin-top:6px;">Werkt ook met bestanden op Google Drive/OneDrive/Dropbox/iCloud: kies "Bladeren" en selecteer het bestand via de cloud-koppeling in je bestandenkiezer.</p>
+        <div id="fileStatus"></div>
+        <div class="progress-wrap" id="geoProgressWrap" style="display:none;">
+          <div class="progress-bar-bg"><div class="progress-bar-fill" id="geoProgressFill"></div></div>
+          <div class="progress-text" id="geoProgressText">Locaties opzoeken...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block" id="blockSearch">
+      <div class="block-body" style="margin-top:0;">
+        <label for="searchInput">Zoeken</label>
+        <input type="text" id="searchInput" placeholder="Zoeken...">
+
+        <label for="radiusSlider">Actieradius rond jouw locatie: <span id="radiusVal">50</span> km</label>
+        <input type="range" id="radiusSlider" min="0" max="175" value="50">
+        <div id="myLocStatus" class="hint" style="margin-top:2px;">Locatie bepalen...</div>
+
+        <label for="postcodeInput" style="margin-top:10px;">Postcode (optioneel, i.p.v. automatische locatie)</label>
+        <input type="text" id="postcodeInput" placeholder="bijv. 6211" maxlength="4" inputmode="numeric" pattern="[0-9]{4}">
+
+        <div class="block" id="blockLocSettings" style="border:none;padding:8px 0 0 0;margin:0;">
+          <div class="block-title" data-block="blockLocSettings" style="font-size:12px;color:var(--km-blue);">
+            <span>Locatie-instellingen</span><span class="car">&#9660;</span>
+          </div>
+          <div class="block-body">
+            <a class="small-link" id="btnRefreshMyLoc">&#128205; Mijn locatie opnieuw ophalen</a><br>
+            <a class="small-link" id="btnRegeocode">&#8635; Klantlocaties opnieuw opzoeken</a><br>
+            <a class="small-link" id="btnClearCache" style="color:#C0392B;">Cache wissen</a><br>
+            <a class="small-link" id="btnClearIgnored">Negeerlijst prospects legen</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block" id="blockFilters">
+      <div class="block-body" style="margin-top:0;">
+        <div class="tabs">
+          <div class="tab active" data-tab="account">Account</div>
+          <div class="tab" data-tab="expiratie">Expiratie</div>
+          <div class="tab" data-tab="merk">Merk</div>
+        </div>
+        <div id="filterListAccount" class="filter-list"></div>
+        <div id="filterListExpiratie" class="filter-list" style="display:none;"></div>
+        <div id="filterListMerk" class="filter-list" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="block collapsed" id="blockProspect">
+      <div class="block-title" data-block="blockProspect"><span>Nieuwe bedrijven vinden</span><span class="car">&#9660;</span></div>
+      <div class="block-body">
+        <label for="prospectTermInput">Soort bedrijf (optioneel)</label>
+        <input type="text" id="prospectTermInput" placeholder="bijv. notaris, of leeg voor de grafische markt">
+        <p class="hint">Zoekt binnen een vaste straal van 25 km rond jouw locatie. Laat leeg voor de grafische markt (drukkerijen, repro's, copyshops, printshops, reclamebureaus, sign making). Typ je een van deze of een gelijkende term, dan wordt automatisch weer de hele grafische markt gezocht. Typ je iets anders, dan wordt alleen op die term gezocht. Meerdere termen mogen, gescheiden door een komma. Bedrijven die al in je bestand staan, worden overgeslagen.</p>
+        <button class="btn-secondary" id="btnProspect">&#128269; Zoek bedrijven in deze regio</button>
+        <div id="prospectStatus"></div>
+      </div>
+    </div>
+
+    <div class="block" id="blockAdditions">
+      <div class="block-title" data-block="blockAdditions"><span>Jouw aanvullingen</span><span class="car">&#9660;</span></div>
+      <div class="block-body">
+        <div class="additions-summary">
+          <b id="addMachCount">0</b> nieuwe machine(s) &middot; <b id="addCompCount">0</b> nieuw(e) bedrijf/bedrijven toegevoegd deze sessie.
+        </div>
+        <button class="btn-primary" id="btnDownloadAdditions">&#11015;&#65039; Download aanvullingen (.xlsx)</button>
+      </div>
+    </div>
+
+    <div class="block block-subtle collapsed" id="blockChangelog">
+      <div class="block-title" data-block="blockChangelog"><span>Versiegeschiedenis</span><span class="car">&#9660;</span></div>
+      <div class="block-body">
+        <div class="changelog-locked" id="changelogLocked">
+          <label for="changelogPw">Wachtwoord</label>
+          <input type="password" id="changelogPw" placeholder="Wachtwoord">
+          <button class="btn-secondary" id="btnUnlockChangelog" style="margin-top:6px;">Ontgrendelen</button>
+        </div>
+        <div class="changelog-body" id="changelogBody" style="display:none;"></div>
+      </div>
+    </div>
+   </div>
+  </aside>
+  <div id="mapWrap">
+    <div id="mapTopBar">
+      <div class="privacy-banner">
+        Alle klantdata blijft lokaal in je browser. Er wordt niets naar een server opgeslagen.
+      </div>
+      <div id="mapLogo">
+        <div class="textcol">
+          <span class="name">account<span class="hl">RADAR</span></span>
+          <span class="ver">v2.0.0</span>
+        </div>
+        <img src="data:image/png;base64,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" alt="">
+      </div>
+    </div>
+    <div id="map"></div>
+  </div>
+</div>
+<div id="toast-wrap"></div>
+<script>
+/* ============================================================
+   accountRADAR - configuratie
+   ============================================================ */
+const CONFIG = {
+  VERSION: '2.0.0',
+  APP_NAME: 'accountRADAR',
+  CHANGELOG_PASSWORD: '1806',
+  // De Google Places API-sleutel staat vanaf v2.0.0 NIET meer hier in de
+  // browser-code. De prospecting-zoekfunctie roept in plaats daarvan onze
+  // eigen server-side Netlify Function aan (/.netlify/functions/places-search),
+  // die zelf de sleutel gebruikt (als environment variable) na te hebben
+  // gecontroleerd dat er een geldige, ingelogde sessie is.
+  PROSPECT_RADIUS_KM: 25,
+  MAX_ACTION_RADIUS_KM: 175,
+  MAIN_SHEET_NAMES: ['testinfo','basislijst'],
+  BRAND_SHEET_HINT: 'merk'
+};
+
+const KM_BLUE = '#0066B2';
+
+/* ============================================================
+   Login / sessie (v2.0.0)
+   ============================================================ */
+const loginOverlay = document.getElementById('loginOverlay');
+const appEl = document.getElementById('app');
+const loginForm = document.getElementById('loginForm');
+const loginError = document.getElementById('loginError');
+const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+const userBadgeName = document.getElementById('userBadgeName');
+
+function unlockApp(username){
+  loginOverlay.classList.add('hidden');
+  appEl.classList.remove('app-locked');
+  if (userBadgeName) userBadgeName.textContent = username ? ('Ingelogd als ' + username) : '';
+}
+
+function lockApp(){
+  loginOverlay.classList.remove('hidden');
+  appEl.classList.add('app-locked');
+}
+
+async function checkSession(){
+  try {
+    const res = await fetch('/.netlify/functions/session-check');
+    if (res.ok){
+      const data = await res.json();
+      unlockApp(data.username);
+    } else {
+      lockApp();
+    }
+  } catch(e){
+    // Function niet bereikbaar (bv. lokaal geopend bestand zonder Netlify) -
+    // toon het inlogscherm; zonder werkende sessie-check kan de tool niet
+    // veilig ontgrendeld worden.
+    lockApp();
+  }
+}
+
+loginForm.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  loginError.textContent = '';
+  loginSubmitBtn.disabled = true;
+  loginSubmitBtn.textContent = 'Bezig...';
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  try {
+    const res = await fetch('/.netlify/functions/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json().catch(()=>({}));
+    if (res.ok){
+      document.getElementById('loginPassword').value = '';
+      unlockApp(data.username);
+    } else {
+      loginError.textContent = data.error || 'Inloggen mislukt.';
+    }
+  } catch(e){
+    loginError.textContent = 'Kon geen verbinding maken met de server. Probeer het opnieuw.';
+  } finally {
+    loginSubmitBtn.disabled = false;
+    loginSubmitBtn.textContent = 'Inloggen';
+  }
+});
+
+document.getElementById('btnLogout').addEventListener('click', async (e)=>{
+  e.preventDefault();
+  try { await fetch('/.netlify/functions/logout', { method:'POST' }); } catch(e){}
+  location.reload();
+});
+
+checkSession();
+
+/* ============================================================
+   Kolomherkenning: canoniek veld -> alias-lijst (incl. Engelse
+   basisnaam). Case-insensitive, spaties worden getrimd.
+   ============================================================ */
+const FIELD_ALIASES = {
+  accountNumber:        ['account number','accountnummer','klantnummer','klant nummer','klantnr','account nr'],
+  accountName:           ['account name','klant','klantnaam','account','bedrijf','bedrijfsnaam'],
+  accountType:            ['account type','soort klant','klanttype','type klant'],
+  salesman:                ['salesman','am','verkoper','accountmanager','account manager'],
+  street:                   ['street','straat','straatnaam','adres'],
+  postalCode:                ['postal code','postcode'],
+  city:                        ['city','plaats','woonplaats','stad'],
+  equipment:                    ['equipment','machine','soort machine','machinetype','machine type','type machine','type'],
+  scheduledEndDate:               ['scheduled end date','verwachte einddatum','expiratie','expiratiedatum','geplande einddatum'],
+  durationMonths:                   ['duration in months','looptijd','duur','contractduur'],
+  endDate:                            ['end date','einddatum','werkelijke einddatum'],
+  primaryContact:                       ['primary contact','contactpersoon','contact','hoofdcontact'],
+  phone:                                   ['telefoonnummer','telefoon','tel','telnr','tel.nr','phone number'],
+  contractNumberERP:                         ['contract number erp','contractnummer','contract','contract nr'],
+  contractType:                                 ['position contract type','contracttype','soort contract','type contract'],
+  monthlyLeaseFee:                                 ['monthly lease fee','leasebedrag','huur per maand','huur','maandbedrag','hw'],
+  assignmentLeasingFee:                              ['assignment leasing fee','lease','leasetermijn'],
+  monthlyOpsFee:                                       ['monthly ops fee','ops','ops bedrag'],
+  monthlyRental:                                         ['monthly rental','interne huur','huur intern'],
+  monthlyFeesSum:                                          ['monthly fees sum','totaal maandbedrag','totale maandlasten','som maandbedragen'],
+  totalClicksBW:                                              ['total clicks bw invoiced','tellerstand bk','teller bk','teller zwart'],
+  totalClicksColor:                                              ['total clicks color invoiced','tellerstand fc','teller fc','tellerstand kleur'],
+  avgClicksBW12m:                                                  ['monthly avg. clicks bw invoiced last 12 months','werkelijk volume zwart','gemiddeld volume zwart'],
+  avgClicksColor12m:                                                  ['monthly avg. clicks col invoiced last 12 months','werkelijk volume kleur','gemiddeld volume kleur'],
+  monthlyServicePriceBW:                                                ['monthly service price bw','maandbedrag zwart','serviceprijs zwart'],
+  monthlyServicePriceColor:                                               ['monthly service price color','maandbedrag kleur','serviceprijs kleur'],
+  clickSalesPriceBW:                                                        ['click sales price total bw','clickprijs zwart','meerklik zwart'],
+  clickSalesPriceColor:                                                       ['click sales price total color','clickprijs kleur','meerklik kleur'],
+  includedClicksBW:                                                             ['included clicks total bw','inbegrepen clicks zwart','vrije volume zwart','inclusief clicks zwart'],
+  includedClicksColor:                                                            ['included clicks total color','inbegrepen clicks kleur','vrije volume kleur','inclusief clicks kleur'],
+  equipmentNumber:                                                                  ['equipment number','serienummer','machine serienummer','eq nummer']
+};
+// alle aliases + de canonieke naam zelf, genormaliseerd
+for (const f in FIELD_ALIASES) {
+  FIELD_ALIASES[f] = FIELD_ALIASES[f].map(a => a.trim().toLowerCase());
+}
+
+const BASE_31_HEADERS = [
+  'Account Number','Account Name','Account Type','Salesman','Street ','Postal Code','City ',
+  'Equipment','Scheduled End Date','Duration in Months','End Date','Primary Contact',
+  'telefoonnummer ','Contract Number ERP ','Position Contract Type','Monthly Lease Fee',
+  'Assignment Leasing Fee','Monthly OPS Fee','Monthly Rental','Monthly Fees Sum',
+  'Total Clicks BW Invoiced','Total Clicks Color Invoiced','Monthly Avg. Clicks BW Invoiced Last 12 Months',
+  'Monthly Avg. Clicks Col Invoiced Last 12 Months','Monthly Service Price BW','Monthly Service Price Color',
+  'Click Sales Price Total BW','Click Sales Price Total Color','Included Clicks Total BW',
+  'Included Clicks Total Color','Equipment Number'
+];
+const BASE_FIELD_ORDER = ['accountNumber','accountName','accountType','salesman','street','postalCode','city',
+  'equipment','scheduledEndDate','durationMonths','endDate','primaryContact','phone','contractNumberERP',
+  'contractType','monthlyLeaseFee','assignmentLeasingFee','monthlyOpsFee','monthlyRental','monthlyFeesSum',
+  'totalClicksBW','totalClicksColor','avgClicksBW12m','avgClicksColor12m','monthlyServicePriceBW',
+  'monthlyServicePriceColor','clickSalesPriceBW','clickSalesPriceColor','includedClicksBW','includedClicksColor',
+  'equipmentNumber'];
+
+/* ============================================================
+   Merkherkenning: vaste huisstijlkleuren + fallback patronen.
+   Wordt aangevuld met een eventuele "merken"-sheet uit het
+   geuploade Excel-bestand.
+   ============================================================ */
+const BRAND_COLORS = {
+  'Konica Minolta': '#0066B2',
+  'Canon': '#D2232A',
+  'Xerox': '#1E8A4C',
+  'Fujifilm': '#FE5000',
+  'Ricoh': '#000000',
+  'Onbekend': '#8A8A8A'
+};
+const BRAND_FALLBACK_PALETTE = ['#6C4FA1','#00838F','#AD1457','#5D4037','#3949AB','#00695C'];
+let brandColorCounter = 0;
+function colorForBrand(brand){
+  if (BRAND_COLORS[brand]) return BRAND_COLORS[brand];
+  // consistente kleur toekennen aan een onbekend/nieuw merk uit de merken-sheet
+  const key = 'arBrandColor_' + brand;
+  if (!colorForBrand._cache) colorForBrand._cache = {};
+  if (colorForBrand._cache[key]) return colorForBrand._cache[key];
+  const c = BRAND_FALLBACK_PALETTE[brandColorCounter % BRAND_FALLBACK_PALETTE.length];
+  brandColorCounter++;
+  colorForBrand._cache[key] = c;
+  return c;
+}
+
+const BRAND_KEYWORD_FALLBACK = [
+  ['accuriopress','Konica Minolta'],['accurioprint','Konica Minolta'],['accuriopro','Konica Minolta'],
+  ['bizhub','Konica Minolta'],['konica','Konica Minolta'],['minolta','Konica Minolta'],
+  ['imagepress','Canon'],['canon','Canon'],
+  ['ricoh','Ricoh'],['pro c','Ricoh'],
+  ['xerox','Xerox'],['versant','Xerox'],['iridesse','Xerox'],['primelink','Xerox'],
+  ['fujifilm','Fujifilm'],['fuji film','Fujifilm'],['revoria','Fujifilm']
+];
+
+let brandPatterns = []; // {pattern, model, brand} gevuld vanuit "merken"-sheet
+let brandCompanyAliases = []; // {pattern, brand} bedrijfsnaam-aliassen zonder specifiek model
+
+function detectBrandAndModel(equipmentText){
+  if (!equipmentText) return {brand:'Onbekend', model:null};
+  const text = String(equipmentText).toLowerCase();
+  let best = null;
+  for (const p of brandPatterns){
+    if (text.includes(p.pattern)){
+      if (!best || p.pattern.length > best.pattern.length) best = p;
+    }
+  }
+  if (best) return {brand: best.brand, model: best.model};
+  for (const a of brandCompanyAliases){
+    if (text.includes(a.pattern)) return {brand: a.brand, model: null};
+  }
+  for (const [kw,brand] of BRAND_KEYWORD_FALLBACK){
+    if (text.includes(kw)) return {brand, model:null};
+  }
+  return {brand:'Onbekend', model:null};
+}
+
+/* ============================================================
+   Contracttype-vertaling (interne codes -> leesbaar Nederlands).
+   Vul deze lijst gerust aan met de codes die in jouw ERP voorkomen.
+   ============================================================ */
+const CONTRACT_TYPE_LABELS = {
+  'fmv':'Full Maintenance & Verbruik','lease':'Lease','huur':'Huur','koop':'Koop',
+  'rental':'Huur','operational lease':'Operational lease','financial lease':'Financial lease',
+  'ops':'Operationele dienstverlening (OPS)'
+};
+function translateContractType(raw){
+  if (!raw) return null;
+  const key = String(raw).trim().toLowerCase();
+  return CONTRACT_TYPE_LABELS[key] || String(raw).trim();
+}
+
+const ACCOUNT_TYPE_LABELS = {'customer':'Customer','prospect':'Prospect','former customer':'Former Customer'};
+const ACCOUNT_TYPE_COLORS = {'customer':KM_BLUE,'prospect':'#E8A33D','former customer':'#8A8A8A','onbekend':'#8A8A8A'};
+</script>
+<script>
+/* ============================================================
+   Status / state
+   ============================================================ */
+const state = {
+  rawRows: [],              // genormaliseerde rijen (1 rij = 1 machine/contract)
+  accounts: [],              // gegroepeerde kaartpunten
+  markers: [],                // leaflet marker refs {marker, account}
+  activeTab: 'account',
+  filters: { account:{}, expiratie:{}, merk:{} },
+  searchTerm: '',
+  startLatLng: null,
+  radiusKm: 50,
+  manualMachines: [],
+  manualCompanies: [],
+  prospectMarkers: [],
+  radiusCircle: null,
+  startMarker: null,
+  hasContractData: false
+};
+
+function normHeader(h){ return String(h==null?'':h).trim().toLowerCase(); }
+
+function toast(msg, isErr){
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  if (isErr) el.style.background = '#7A1010';
+  wrap.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('show'));
+  setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(),300); }, 4200);
+}
+
+/* ============================================================
+   Kolommen mappen op basis van FIELD_ALIASES
+   ============================================================ */
+function mapColumns(headers){
+  const norm = headers.map(h=>normHeader(h));
+  const used = new Set();
+  const mapping = {};
+  for (const field of Object.keys(FIELD_ALIASES)){
+    const aliases = FIELD_ALIASES[field];
+    let foundIdx = -1;
+    for (let i=0;i<norm.length;i++){
+      if (used.has(i)) continue;
+      if (aliases.includes(norm[i])){ foundIdx = i; break; }
+    }
+    if (foundIdx >= 0){ mapping[field] = headers[foundIdx]; used.add(foundIdx); }
+  }
+  return mapping;
+}
+
+function pickMainSheet(workbook){
+  const names = workbook.SheetNames;
+  for (const hint of CONFIG.MAIN_SHEET_NAMES){
+    const found = names.find(n => n.trim().toLowerCase() === hint);
+    if (found) return found;
+  }
+  // val terug op eerste sheet die geen "merken" of "toelichting" in de naam heeft
+  const fallback = names.find(n => !/merk|toelicht/i.test(n));
+  return fallback || names[0];
+}
+
+function findBrandSheet(workbook){
+  return workbook.SheetNames.find(n => n.toLowerCase().includes(CONFIG.BRAND_SHEET_HINT));
+}
+
+function parseBrandSheet(workbook, sheetName){
+  brandPatterns = [];
+  brandCompanyAliases = [];
+  if (!sheetName) return;
+  const ws = workbook.Sheets[sheetName];
+  const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:null});
+  let currentBrand = null;
+  for (const row of rows){
+    const a = row[0], b = row[1];
+    if (a == null && b == null) continue;
+    const aStr = String(a==null?'':a).trim();
+    if (/^mbt\s+/i.test(aStr)){
+      let brandRaw = aStr.replace(/^mbt\s+/i,'').trim();
+      currentBrand = normalizeBrandLabel(brandRaw);
+      continue;
+    }
+    if (a != null && b != null){
+      const pattern = String(a).trim().toLowerCase();
+      const modelName = String(b).trim();
+      if (!pattern) continue;
+      // als de "modelnaam" gelijk is aan het merk zelf (bedrijfsnaam-alias), apart bewaren
+      if (currentBrand && modelName.toLowerCase() === currentBrand.toLowerCase()){
+        brandCompanyAliases.push({pattern, brand: currentBrand});
+      } else {
+        brandPatterns.push({pattern, model: modelName, brand: currentBrand || guessBrandFromModel(modelName)});
+      }
+    }
+  }
+}
+function normalizeBrandLabel(raw){
+  const r = raw.toLowerCase();
+  if (r.includes('konica')) return 'Konica Minolta';
+  if (r.includes('canon')) return 'Canon';
+  if (r.includes('ricoh')) return 'Ricoh';
+  if (r.includes('xerox')) return 'Xerox';
+  if (r.includes('fuji')) return 'Fujifilm';
+  return raw.trim().replace(/\b\w/g, c=>c.toUpperCase());
+}
+function guessBrandFromModel(modelName){
+  const m = modelName.toLowerCase();
+  for (const [kw,brand] of BRAND_KEYWORD_FALLBACK){ if (m.includes(kw)) return brand; }
+  return 'Onbekend';
+}
+
+/* ============================================================
+   Excel inlezen (upload of via leeslink)
+   ============================================================ */
+function readWorkbookFromArrayBuffer(buf){
+  return XLSX.read(buf, {type:'array', cellDates:true});
+}
+
+function processWorkbook(workbook){
+  const mainSheetName = pickMainSheet(workbook);
+  const ws = workbook.Sheets[mainSheetName];
+  const asObjects = XLSX.utils.sheet_to_json(ws, {defval:null, raw:true});
+  if (!asObjects.length){ toast('Het geselecteerde tabblad bevat geen data.', true); return; }
+  const headers = Object.keys(asObjects[0]);
+  const mapping = mapColumns(headers);
+  if (!mapping.accountName && !mapping.street){
+    toast('Kon geen klantnaam- of adreskolom herkennen in dit bestand.', true);
+    return;
+  }
+
+  const brandSheet = findBrandSheet(workbook);
+  parseBrandSheet(workbook, brandSheet);
+
+  const rows = [];
+  for (const raw of asObjects){
+    const row = {};
+    for (const field in mapping){ row[field] = raw[mapping[field]]; }
+    // lege rijen overslaan
+    if (!row.accountName && !row.street) continue;
+    rows.push(row);
+  }
+
+  state.rawRows = rows;
+  state.hasContractData = rows.some(r => r.endDate || r.contractNumberERP || r.monthlyFeesSum || r.scheduledEndDate);
+  buildAccountsFromRows();
+}
+</script>
+<script>
+/* ============================================================
+   Rijen groeperen tot accounts (kaartpunten) op klantnummer/naam
+   + adres samen. Machines samenvoegen tot 1 lijst, identieke
+   machines samengevoegd tot "Nx model".
+   ============================================================ */
+function normAddrKey(row){
+  const street = String(row.street||'').trim().toLowerCase();
+  const postal = String(row.postalCode||'').trim().toLowerCase().replace(/\s+/g,'');
+  const city = String(row.city||'').trim().toLowerCase();
+  return street+'|'+postal+'|'+city;
+}
+function accountKey(row){
+  const idPart = row.accountNumber != null && String(row.accountNumber).trim() !== ''
+    ? 'num:'+String(row.accountNumber).trim().toLowerCase()
+    : 'name:'+String(row.accountName||'').trim().toLowerCase();
+  return idPart + '||' + normAddrKey(row);
+}
+
+function buildAccountsFromRows(){
+  const groups = new Map();
+  for (const row of state.rawRows){
+    const key = accountKey(row);
+    if (!groups.has(key)){
+      groups.set(key, {
+        key,
+        accountNumber: row.accountNumber || null,
+        accountName: row.accountName || '(onbekende naam)',
+        accountType: row.accountType ? String(row.accountType).trim().toLowerCase() : null,
+        salesman: row.salesman || null,
+        street: row.street || null,
+        postalCode: row.postalCode || null,
+        city: row.city || null,
+        primaryContact: row.primaryContact || null,
+        phone: row.phone || null,
+        rows: []
+      });
+    }
+    groups.get(key).rows.push(row);
+  }
+
+  const accounts = [];
+  for (const g of groups.values()){
+    g.machines = buildMachineList(g.rows);
+    g.nearestEndDate = computeNearestEndDate(g.rows);
+    g.expiration = expirationBucket(g.nearestEndDate);
+    g.primaryBrand = computePrimaryBrand(g.machines);
+    g.addressFull = [g.street, [g.postalCode, g.city].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+    accounts.push(g);
+  }
+  state.accounts = accounts;
+  toast(accounts.length + ' account(en) gevonden, ' + state.rawRows.length + ' machine/contract-regels.');
+  geocodeAllAccounts();
+}
+
+function buildMachineList(rows){
+  const map = new Map();
+  for (const row of rows){
+    const {brand, model} = detectBrandAndModel(row.equipment);
+    const displayModel = model || row.equipment || 'Onbekende machine';
+    const ctypeRaw = row.contractType || null;
+    const mKey = displayModel.toLowerCase()+'||'+String(ctypeRaw||'').toLowerCase();
+    if (!map.has(mKey)){
+      map.set(mKey, {
+        displayModel, brand, contractTypeRaw: ctypeRaw,
+        contractTypeLabel: translateContractType(ctypeRaw),
+        count: 0,
+        serials: [],
+        endDate: row.endDate || null,
+        scheduledEndDate: row.scheduledEndDate || null,
+        monthlyFeesSum: row.monthlyFeesSum || null,
+        avgClicksBW12m: row.avgClicksBW12m || null,
+        avgClicksColor12m: row.avgClicksColor12m || null,
+        equipmentNumber: row.equipmentNumber || null
+      });
+    }
+    const m = map.get(mKey);
+    m.count += 1;
+    if (row.equipmentNumber) m.serials.push(row.equipmentNumber);
+  }
+  const list = Array.from(map.values());
+  list.sort((a,b)=>{
+    const na = parseInt((String(a.displayModel).match(/\d+/)||['0'])[0],10);
+    const nb = parseInt((String(b.displayModel).match(/\d+/)||['0'])[0],10);
+    return na - nb;
+  });
+  return list;
+}
+
+function computeNearestEndDate(rows){
+  let nearest = null;
+  for (const row of rows){
+    const d = row.endDate || row.scheduledEndDate;
+    if (!d) continue;
+    const dt = (d instanceof Date) ? d : new Date(d);
+    if (isNaN(dt.getTime())) continue;
+    if (!nearest || dt < nearest) nearest = dt;
+  }
+  return nearest;
+}
+
+function expirationBucket(date){
+  if (!date) return 'onbekend';
+  const now = new Date();
+  const months = (date - now) / (1000*60*60*24*30.44);
+  if (months < 0) return 'verlopen';
+  if (months <= 3) return 'binnen3';
+  if (months <= 12) return 'binnen12';
+  return 'langer12';
+}
+const EXPIRATION_LABELS = {
+  langer12:'Loopt langer dan 12 maanden', binnen12:'Verloopt binnen 12 maanden',
+  binnen3:'Verloopt binnen 3 maanden', verlopen:'Contract verlopen', onbekend:'Onbekend / geen data'
+};
+const EXPIRATION_COLORS = {
+  langer12:'#1E8A4C', binnen12:'#E8A33D', binnen3:'#C0392B', verlopen:'#7A1010', onbekend:'#8A8A8A'
+};
+function expirationGlows(bucket){ return bucket==='binnen3' || bucket==='binnen12' || bucket==='verlopen'; }
+
+function computePrimaryBrand(machines){
+  if (!machines.length) return 'Onbekend';
+  const counts = {};
+  for (const m of machines){ counts[m.brand] = (counts[m.brand]||0) + m.count; }
+  let best = 'Onbekend', bestN = -1;
+  for (const b in counts){ if (counts[b] > bestN){ best=b; bestN=counts[b]; } }
+  return best;
+}
+
+/* ============================================================
+   Geocoding via PDOK Locatieserver, met lokale cache en fallback
+   op postcode+plaats.
+   ============================================================ */
+const GEOCODE_CACHE_KEY = 'accountradar_geocode_cache_v1';
+function loadGeoCache(){
+  try { return JSON.parse(localStorage.getItem(GEOCODE_CACHE_KEY) || '{}'); }
+  catch(e){ return {}; }
+}
+function saveGeoCache(cache){
+  try { localStorage.setItem(GEOCODE_CACHE_KEY, JSON.stringify(cache)); } catch(e){}
+}
+let geoCache = loadGeoCache();
+
+function geocodeQueryKey(street, postal, city){
+  return [street,postal,city].map(x=>String(x||'').trim().toLowerCase()).join('|');
+}
+
+async function pdokLookup(query, restrictToAdres){
+  let url = 'https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?q=' + encodeURIComponent(query) + '&rows=1';
+  if (restrictToAdres !== false) url += '&fq=type:adres';
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  const data = await res.json();
+  const doc = data && data.response && data.response.docs && data.response.docs[0];
+  if (!doc || !doc.centroide_ll) return null;
+  const m = /POINT\(([-\d.]+)\s+([-\d.]+)\)/.exec(doc.centroide_ll);
+  if (!m) return null;
+  return { lat: parseFloat(m[2]), lng: parseFloat(m[1]) };
+}
+
+async function geocodeOne(street, postal, city){
+  const cacheKey = geocodeQueryKey(street, postal, city);
+  if (geoCache[cacheKey]) return geoCache[cacheKey];
+
+  let result = null;
+  let approx = false;
+  const fullQuery = [street, postal, city].filter(Boolean).join(' ');
+  if (fullQuery){
+    try { result = await pdokLookup(fullQuery); } catch(e){ result = null; }
+  }
+  if (!result){
+    const fallbackQuery = [postal, city].filter(Boolean).join(' ');
+    if (fallbackQuery){
+      try { result = await pdokLookup(fallbackQuery, false); approx = true; } catch(e){ result = null; }
+    }
+  }
+  if (result){
+    result.approx = approx;
+    geoCache[cacheKey] = result;
+    saveGeoCache(geoCache);
+  }
+  return result;
+}
+
+async function geocodeAllAccounts(){
+  const uniqueAddrs = new Map();
+  for (const acc of state.accounts){
+    const key = geocodeQueryKey(acc.street, acc.postalCode, acc.city);
+    if (!uniqueAddrs.has(key)) uniqueAddrs.set(key, {street:acc.street, postal:acc.postalCode, city:acc.city});
+  }
+  const toLookup = Array.from(uniqueAddrs.entries()).filter(([key]) => !geoCache[key]);
+
+  const progressWrap = document.getElementById('geoProgressWrap');
+  const progressFill = document.getElementById('geoProgressFill');
+  const progressText = document.getElementById('geoProgressText');
+
+  if (toLookup.length > 0){
+    progressWrap.style.display = 'block';
+    let done = 0;
+    for (const [key, addr] of toLookup){
+      await geocodeOne(addr.street, addr.postal, addr.city);
+      done++;
+      const pct = Math.round((done/toLookup.length)*100);
+      progressFill.style.width = pct + '%';
+      progressText.textContent = 'Locaties opzoeken... (' + done + '/' + toLookup.length + ')';
+      await new Promise(r=>setTimeout(r, 120)); // kleine vertraging i.v.m. PDOK rate-limit
+    }
+  }
+  progressText.textContent = 'Klaar met opzoeken.';
+  setTimeout(()=>{ progressWrap.style.display='none'; }, 900);
+
+  // coordinaten toekennen
+  for (const acc of state.accounts){
+    const key = geocodeQueryKey(acc.street, acc.postalCode, acc.city);
+    const geo = geoCache[key];
+    if (geo){ acc.lat = geo.lat; acc.lng = geo.lng; acc.approx = !!geo.approx; }
+    else { acc.lat = null; acc.lng = null; acc.approx = false; }
+  }
+  applyJitter();
+  collapseFileBlock();
+  renderFilters();
+  renderMarkers();
+  document.getElementById('loadedCountText').textContent = state.accounts.length + ' accounts geladen';
+}
+
+function applyJitter(){
+  const seen = new Map();
+  for (const acc of state.accounts){
+    if (acc.lat == null) continue;
+    acc.realLat = acc.lat; acc.realLng = acc.lng;
+    const rkey = acc.lat.toFixed(5)+','+acc.lng.toFixed(5);
+    const n = seen.get(rkey) || 0;
+    if (n > 0){
+      const angle = n * 137.5 * Math.PI/180;
+      const dist = 0.00025 * n;
+      acc.lat = acc.realLat + Math.cos(angle)*dist;
+      acc.lng = acc.realLng + Math.sin(angle)*dist;
+    }
+    seen.set(rkey, n+1);
+  }
+}
+
+function collapseFileBlock(){
+  const block = document.getElementById('blockFile');
+  block.classList.add('collapsed');
+}
+
+function haversineKm(lat1, lng1, lat2, lng2){
+  const R = 6371;
+  const dLat = (lat2-lat1)*Math.PI/180, dLng=(lng2-lng1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+</script>
+<script>
+/* ============================================================
+   Kaart initialiseren
+   ============================================================ */
+const map = L.map('map', {zoomControl:true}).setView([52.15, 5.4], 7);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap-bijdragers',
+  maxZoom: 19
+}).addTo(map);
+
+function iconFor(color, glow){
+  return L.divIcon({
+    className: '',
+    html: '<div class="'+(glow?'glow-marker':'')+'" style="color:'+color+';width:14px;height:14px;border-radius:50% 50% 50% 0;background:'+color+';transform:rotate(-45deg);border:1.5px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.35);"></div>',
+    iconSize: [14,14],
+    iconAnchor: [7,14],
+    popupAnchor: [0,-14]
+  });
+}
+function dotIconFor(color, glow){
+  return L.divIcon({
+    className:'',
+    html:'<div class="'+(glow?'glow-marker':'')+'" style="color:'+color+';width:16px;height:16px;border-radius:50%;background:'+color+';border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);"></div>',
+    iconSize:[16,16], iconAnchor:[8,8], popupAnchor:[0,-8]
+  });
+}
+
+/* ============================================================
+   Filters (Account / Expiratie / Merk tabbladen)
+   ============================================================ */
+function colorForAccount(acc, tab){
+  if (tab === 'account'){
+    const t = (acc.accountType||'onbekend').toLowerCase();
+    return ACCOUNT_TYPE_COLORS[t] || '#8A8A8A';
+  }
+  if (tab === 'expiratie'){
+    return EXPIRATION_COLORS[acc.expiration] || '#8A8A8A';
+  }
+  return colorForBrand(acc.primaryBrand);
+}
+function labelForAccount(acc, tab){
+  if (tab === 'account'){
+    const t = (acc.accountType||'').toLowerCase();
+    return ACCOUNT_TYPE_LABELS[t] || 'Onbekend';
+  }
+  if (tab === 'expiratie') return EXPIRATION_LABELS[acc.expiration];
+  return acc.primaryBrand || 'Onbekend';
+}
+
+function renderFilters(){
+  ['account','expiratie','merk'].forEach(tab=>{
+    const counts = new Map();
+    for (const acc of state.accounts){
+      const label = labelForAccount(acc, tab);
+      const color = colorForAccount(acc, tab);
+      const key = label;
+      if (!counts.has(key)) counts.set(key, {label, color, n:0});
+      counts.get(key).n++;
+      if (state.filters[tab][key] === undefined) state.filters[tab][key] = true;
+    }
+    const container = document.getElementById('filterList'+tab.charAt(0).toUpperCase()+tab.slice(1));
+    container.innerHTML = '';
+    const title = document.createElement('div');
+    title.className = 'filter-group-title';
+    title.textContent = tab === 'account' ? 'Accounttype' : (tab === 'expiratie' ? 'Contractstatus' : 'Merk');
+    container.appendChild(title);
+    const sorted = Array.from(counts.values()).sort((a,b)=>b.n-a.n);
+    for (const item of sorted){
+      const row = document.createElement('div');
+      row.className = 'filter-row';
+      row.innerHTML = '<input type="checkbox" '+(state.filters[tab][item.label]?'checked':'')+' data-tab="'+tab+'" data-key="'+escapeAttr(item.label)+'">'+
+        '<span class="dot" style="background:'+item.color+'"></span>'+
+        '<span class="flabel">'+escapeHtml(item.label)+'</span>'+
+        '<span class="fcount">'+item.n+'</span>';
+      container.appendChild(row);
+    }
+  });
+}
+function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+
+document.addEventListener('change', (e)=>{
+  if (e.target.matches('.filter-row input[type=checkbox]')){
+    const tab = e.target.getAttribute('data-tab');
+    const key = e.target.getAttribute('data-key');
+    state.filters[tab][key] = e.target.checked;
+    renderMarkers();
+  }
+});
+
+/* ============================================================
+   Markers renderen (respecteert filters, zoekterm, actieradius)
+   ============================================================ */
+function accountMatchesSearch(acc, term){
+  const haystacks = [
+    acc.accountName, acc.accountNumber, acc.street, acc.postalCode, acc.city,
+    acc.primaryContact, acc.salesman, acc.phone, acc.accountType
+  ];
+  for (const m of (acc.machines||[])){
+    haystacks.push(m.displayModel, m.brand, m.contractTypeLabel, m.equipmentNumber);
+    if (m.serials) haystacks.push(...m.serials);
+  }
+  return haystacks.some(v => v != null && String(v).toLowerCase().includes(term));
+}
+
+function passesFilters(acc){
+  if (acc.lat == null) return false;
+  const tab = state.activeTab;
+  const label = labelForAccount(acc, tab);
+  if (state.filters[tab][label] === false) return false;
+  if (state.searchTerm){
+    if (!accountMatchesSearch(acc, state.searchTerm)) return false;
+  }
+  if (state.startLatLng && state.radiusKm > 0){
+    const d = haversineKm(state.startLatLng.lat, state.startLatLng.lng, acc.realLat, acc.realLng);
+    if (d > state.radiusKm) return false;
+  }
+  return true;
+}
+
+function renderMarkers(){
+  let reopenKey = null;
+  for (const m of state.markers){
+    if (m.marker.isPopupOpen && m.marker.isPopupOpen()) reopenKey = m.account.key;
+    map.removeLayer(m.marker);
+  }
+  state.markers = [];
+  const tab = state.activeTab;
+  for (const acc of state.accounts){
+    if (!passesFilters(acc)) continue;
+    const color = colorForAccount(acc, tab);
+    const glow = tab === 'expiratie' && expirationGlows(acc.expiration);
+    const icon = iconFor(color, glow);
+    const marker = L.marker([acc.lat, acc.lng], {icon});
+    marker.bindPopup(()=>buildPopupHTML(acc), {maxWidth:300});
+    marker.addTo(map);
+    state.markers.push({marker, account:acc});
+  }
+  if (reopenKey){
+    const match = state.markers.find(m=>m.account.key===reopenKey);
+    if (match) match.marker.openPopup();
+  }
+}
+
+/* ============================================================
+   Pop-up inhoud
+   ============================================================ */
+function fmtCurrency(v){
+  if (v == null || v === '') return null;
+  const n = Number(v);
+  if (isNaN(n)) return String(v);
+  return '\u20ac' + n.toLocaleString('nl-NL', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function fmtDate(d){
+  if (!d) return null;
+  const dt = (d instanceof Date) ? d : new Date(d);
+  if (isNaN(dt.getTime())) return null;
+  return dt.toLocaleDateString('nl-NL', {day:'2-digit', month:'2-digit', year:'numeric'});
+}
+function fmtNum(v){
+  if (v == null || v === '') return null;
+  const n = Number(v);
+  if (isNaN(n)) return String(v);
+  return n.toLocaleString('nl-NL');
+}
+
+let popupAccountRef = null; // voor event delegation van de "+"-knop
+
+function buildPopupHTML(acc){
+  popupAccountRef = acc;
+  const badgeExpClass = {langer12:'badge-exp-safe', binnen12:'badge-exp-mid', binnen3:'badge-exp-urgent', verlopen:'badge-exp-expired', onbekend:'badge-exp-mid'}[acc.expiration];
+  const typeLabel = ACCOUNT_TYPE_LABELS[(acc.accountType||'').toLowerCase()] || null;
+
+  let html = '<div class="arp" data-key="'+escapeAttr(acc.key)+'">';
+  html += '<h3>'+escapeHtml(acc.accountName)+'</h3>';
+  html += '<div class="badges">';
+  if (EXPIRATION_LABELS[acc.expiration] && acc.expiration !== 'onbekend') html += '<span class="badge '+badgeExpClass+'">'+EXPIRATION_LABELS[acc.expiration]+'</span>';
+  if (typeLabel) html += '<span class="badge badge-type">'+typeLabel+'</span>';
+  html += '</div>';
+
+  if (acc.approx) html += '<div class="approx-note">Benaderde locatie (op basis van postcode/plaats)</div>';
+
+  if (acc.addressFull){
+    const gmaps = 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(acc.realLat+','+acc.realLng);
+    const amaps = 'https://maps.apple.com/?q='+encodeURIComponent(acc.addressFull)+'&ll='+acc.realLat+','+acc.realLng;
+    const waze = 'https://waze.com/ul?ll='+acc.realLat+'%2C'+acc.realLng+'&navigate=yes';
+    html += '<div class="field addr-row">'+
+      '<a href="'+amaps+'" target="_blank" rel="noopener" class="addr-link">'+escapeHtml(acc.addressFull)+'</a>'+
+      '<a href="'+gmaps+'" target="_blank" rel="noopener" class="map-icon g" title="Google Maps">G</a>'+
+      '<a href="'+waze+'" target="_blank" rel="noopener" class="map-icon w" title="Waze">W</a>'+
+      '</div>';
+  }
+  if (acc.accountNumber && (acc.accountType||'').toLowerCase()==='customer'){
+    html += '<div class="field"><span class="lbl">Klantnummer:</span> '+escapeHtml(acc.accountNumber)+'</div>';
+  }
+  if (acc.phone){
+    html += '<div class="field"><a href="tel:'+String(acc.phone).replace(/\s+/g,'')+'">'+escapeHtml(acc.phone)+'</a></div>';
+  }
+  if (acc.primaryContact) html += '<div class="field"><span class="lbl">Contact:</span> '+escapeHtml(acc.primaryContact)+'</div>';
+  if (acc.salesman) html += '<div class="field"><span class="lbl">Accountmanager:</span> '+escapeHtml(acc.salesman)+'</div>';
+
+  html += '<hr>';
+  const hdrLabel = state.hasContractData ? 'Machines &amp; contracten' : 'Machines';
+  html += '<div class="mach-hdr"><span>'+hdrLabel+' ('+acc.machines.length+')</span>';
+  if (state.activeTab === 'merk' && (acc.accountType||'').toLowerCase() !== 'customer'){
+    html += '<button class="add-btn" id="btnAddMachine" title="Machine toevoegen">+</button>';
+  }
+  html += '</div>';
+
+  for (const m of acc.machines){
+    const countPrefix = m.count > 1 ? m.count+'x ' : '';
+    html += '<div class="mach-item">';
+    html += '<div>'+countPrefix+escapeHtml(m.displayModel)+(m.serials.length && m.count===1 ? ' - '+escapeHtml(m.serials[0]) : '')+'</div>';
+    const bits = [];
+    if (m.contractTypeLabel) bits.push(m.contractTypeLabel);
+    const endD = fmtDate(m.endDate || m.scheduledEndDate);
+    if (endD) bits.push('Einddatum: '+endD);
+    const fee = fmtCurrency(m.monthlyFeesSum);
+    if (fee) bits.push(fee+'/mnd');
+    const bw = fmtNum(m.avgClicksBW12m), col = fmtNum(m.avgClicksColor12m);
+    if (bw || col) bits.push('Gem. volume: '+(bw||'0')+' zw/w'+(col?', '+col+' kleur':'')+' (12 mnd)');
+    if (bits.length) html += '<div class="lbl">'+bits.join(' &middot; ')+'</div>';
+    html += '</div>';
+  }
+  if (!acc.machines.length) html += '<div class="lbl">Geen machines bekend.</div>';
+
+  html += '<div id="addMachineFormWrap"></div>';
+  html += '</div>';
+  return html;
+}
+
+document.addEventListener('click', (e)=>{
+  if (e.target && e.target.id === 'btnAddMachine'){
+    const wrap = document.getElementById('addMachineFormWrap');
+    wrap.innerHTML = '<div class="add-form">'+
+      '<input type="text" id="newMachModel" placeholder="Merk/model">'+
+      '<input type="text" id="newMachNote" placeholder="Opmerking (optioneel)">'+
+      '<button class="btn-primary" id="btnSaveNewMach">Toevoegen</button></div>';
+  }
+  if (e.target && e.target.id === 'btnSaveNewMach'){
+    const model = document.getElementById('newMachModel').value.trim();
+    const note = document.getElementById('newMachNote').value.trim();
+    if (!model){ toast('Vul een merk/model in.', true); return; }
+    const acc = popupAccountRef;
+    state.manualMachines.push({
+      accountKey: acc.key, accountNumber: acc.accountNumber, accountName: acc.accountName,
+      accountType: acc.accountType, salesman: acc.salesman, street: acc.street,
+      postalCode: acc.postalCode, city: acc.city, primaryContact: acc.primaryContact, phone: acc.phone,
+      equipment: model, note, addedAt: new Date()
+    });
+    const {brand, model:mdl} = detectBrandAndModel(model);
+    acc.machines.push({displayModel: mdl||model, brand, contractTypeRaw:null, contractTypeLabel:null, count:1, serials:[], endDate:null, scheduledEndDate:null, monthlyFeesSum:null, avgClicksBW12m:null, avgClicksColor12m:null, equipmentNumber:null});
+    updateAdditionsCounters();
+    map.closePopup();
+    toast('Machine toegevoegd aan '+acc.accountName+'.');
+    renderMarkers();
+  }
+});
+
+function updateAdditionsCounters(){
+  document.getElementById('addMachCount').textContent = state.manualMachines.length;
+  document.getElementById('addCompCount').textContent = state.manualCompanies.length;
+}
+</script>
+<script>
+/* ============================================================
+   Prospecting: nieuwe grafische bedrijven zoeken (Google Places API - New)
+   ============================================================ */
+const PROSPECT_QUERIES = ['drukkerij','reprobedrijf','copyshop','printshop','reclamebureau','sign making bedrijf'];
+const GRAPHIC_TRIGGER_KEYWORDS = ['druk','repro','copy','kopie','print','reclame','sign','grafisch','offset','zeefdruk','sticker','belettering','drukwerk'];
+const PROSPECT_CACHE_KEY = 'accountradar_prospect_cache_v1';
+const PROSPECT_IGNORE_KEY = 'accountradar_prospect_ignored_v1';
+
+function loadProspectCache(){ try{ return JSON.parse(localStorage.getItem(PROSPECT_CACHE_KEY)||'{}'); }catch(e){ return {}; } }
+function saveProspectCache(c){ try{ localStorage.setItem(PROSPECT_CACHE_KEY, JSON.stringify(c)); }catch(e){} }
+let prospectCache = loadProspectCache();
+
+function loadIgnoredProspects(){ try{ return new Set(JSON.parse(localStorage.getItem(PROSPECT_IGNORE_KEY)||'[]')); }catch(e){ return new Set(); } }
+function saveIgnoredProspects(set){ try{ localStorage.setItem(PROSPECT_IGNORE_KEY, JSON.stringify(Array.from(set))); }catch(e){} }
+let ignoredProspects = loadIgnoredProspects();
+
+/* Bepaalt welke zoektermen daadwerkelijk gebruikt worden, op basis van
+   wat de gebruiker invult in het "Soort bedrijf"-veld:
+   - leeg -> de 6 standaard grafische termen
+   - een van de 6 (of een gelijkende term) -> alle 6 grafische termen
+   - iets anders -> alleen die eigen term (meerdere, komma-gescheiden, mogen) */
+function resolveProspectQueries(rawInput){
+  const input = String(rawInput||'').trim();
+  if (!input) return PROSPECT_QUERIES.slice();
+  const terms = input.split(',').map(t=>t.trim()).filter(Boolean);
+  if (!terms.length) return PROSPECT_QUERIES.slice();
+  const result = [];
+  const seen = new Set();
+  const addUnique = (q) => { const k = q.toLowerCase(); if (!seen.has(k)){ seen.add(k); result.push(q); } };
+  for (const term of terms){
+    const t = term.toLowerCase();
+    const isGraphic = PROSPECT_QUERIES.some(q=>q.toLowerCase()===t) ||
+                       GRAPHIC_TRIGGER_KEYWORDS.some(kw=>t.includes(kw));
+    if (isGraphic){
+      PROSPECT_QUERIES.forEach(addUnique);
+    } else {
+      addUnique(term);
+    }
+  }
+  return result;
+}
+
+function regionKeyFor(lat, lng, queries){
+  // raster van ~5 km + de gebruikte zoektermen, zodat verschillende
+  // zoekopdrachten in dezelfde buurt niet elkaars cache overschrijven
+  const loc = Math.round(lat/0.045)+'_'+Math.round(lng/0.07);
+  const qKey = queries.slice().sort().join('|').toLowerCase();
+  return loc+'::'+qKey;
+}
+
+function prospectDotIcon(){
+  return L.divIcon({
+    className:'', html:'<div style="width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid '+KM_BLUE+';box-shadow:0 1px 4px rgba(0,0,0,.35);"></div>',
+    iconSize:[14,14], iconAnchor:[7,7], popupAnchor:[0,-7]
+  });
+}
+
+function clearProspectMarkersFromMap(){
+  for (const m of state.prospectMarkers){ map.removeLayer(m); }
+  state.prospectMarkers = [];
+}
+
+function updateProspectVisibility(){
+  const shouldShow = state.activeTab === 'account';
+  for (const m of state.prospectMarkers){
+    if (shouldShow && !map.hasLayer(m)) m.addTo(map);
+    else if (!shouldShow && map.hasLayer(m)) map.removeLayer(m);
+  }
+}
+
+async function runProspectSearch(){
+  const statusEl = document.getElementById('prospectStatus');
+  if (!state.startLatLng){
+    statusEl.innerHTML = '<div class="status-msg status-err">Kon je locatie nog niet bepalen. Klik in Locatie-instellingen op "Mijn locatie opnieuw ophalen" en geef toestemming in de browser, of vul een postcode in.</div>';
+    return;
+  }
+  const queries = resolveProspectQueries(document.getElementById('prospectTermInput').value);
+  const regionKey = regionKeyFor(state.startLatLng.lat, state.startLatLng.lng, queries);
+  const cached = prospectCache[regionKey];
+
+  clearProspectMarkersFromMap();
+
+  statusEl.innerHTML = '<div class="status-msg status-info">Zoeken naar bedrijven binnen 25 km...</div>';
+  const known = new Set(state.accounts.map(a=>String(a.accountName||'').trim().toLowerCase()));
+  const seenPlaceIds = new Set();
+  const foundPlaces = [];
+  let authError = false;
+
+  for (const q of queries){
+    try {
+      const res = await fetch('/.netlify/functions/places-search', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify({
+          textQuery: q,
+          lat: state.startLatLng.lat,
+          lng: state.startLatLng.lng,
+          radiusMeters: CONFIG.PROSPECT_RADIUS_KM*1000
+        })
+      });
+      if (res.status === 401){ authError = true; break; }
+      if (!res.ok) continue;
+      const data = await res.json();
+      const places = data.places || [];
+      for (const p of places){
+        if (seenPlaceIds.has(p.id)) continue;
+        seenPlaceIds.add(p.id);
+        const name = p.displayName && p.displayName.text;
+        if (!name || known.has(name.trim().toLowerCase())) continue;
+        const dist = haversineKm(state.startLatLng.lat, state.startLatLng.lng, p.location.latitude, p.location.longitude);
+        if (dist > CONFIG.PROSPECT_RADIUS_KM) continue;
+        foundPlaces.push({
+          id: p.id, name: name, address: p.formattedAddress||'',
+          lat: p.location.latitude, lng: p.location.longitude,
+          website: p.websiteUri||null, phone: p.internationalPhoneNumber||null
+        });
+      }
+    } catch(e){ /* stilzwijgend doorgaan met volgende categorie */ }
+  }
+
+  if (authError){
+    if (cached && cached.places && cached.places.length){
+      renderProspectPlaces(cached.places);
+      statusEl.innerHTML = '<div class="status-msg status-err">Je sessie is verlopen. Resultaten van '+fmtDate(new Date(cached.timestamp))+' getoond (uit cache). Log opnieuw in om te verversen.</div>';
+    } else {
+      statusEl.innerHTML = '<div class="status-msg status-err">Je sessie is verlopen. Log opnieuw in en probeer het nogmaals.</div>';
+    }
+    return;
+  }
+
+  prospectCache[regionKey] = { timestamp: Date.now(), places: foundPlaces };
+  saveProspectCache(prospectCache);
+  renderProspectPlaces(foundPlaces);
+  statusEl.innerHTML = '<div class="status-msg status-ok">'+foundPlaces.length+' nieuw(e) bedrijf/bedrijven gevonden.</div>';
+}
+
+function renderProspectPlaces(places){
+  for (const place of places){
+    if (ignoredProspects.has(place.id)) continue;
+    addProspectMarker(place);
+  }
+  updateProspectVisibility();
+}
+
+function addProspectMarker(place){
+  const marker = L.marker([place.lat, place.lng], {icon: prospectDotIcon()});
+  const html = '<div class="arp">'+
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;">'+
+    '<h3 style="margin:0;">'+escapeHtml(place.name)+'</h3>'+
+    '<div style="display:flex;gap:5px;flex-shrink:0;">'+
+    '<button class="add-btn" title="Toevoegen aan downloadlijst" data-prospect-add="1">+</button>'+
+    '<button class="add-btn" style="background:#C0392B;" title="Niet meer tonen" data-prospect-ignore="1">&#10005;</button>'+
+    '</div></div>'+
+    (function(){
+      const gm = 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(place.lat+','+place.lng);
+      const am = 'https://maps.apple.com/?q='+encodeURIComponent(place.address||place.name)+'&ll='+place.lat+','+place.lng;
+      const wz = 'https://waze.com/ul?ll='+place.lat+'%2C'+place.lng+'&navigate=yes';
+      return '<div class="field addr-row" style="margin-top:6px;">'+
+        '<a href="'+am+'" target="_blank" rel="noopener" class="addr-link">'+escapeHtml(place.address)+'</a>'+
+        '<a href="'+gm+'" target="_blank" rel="noopener" class="map-icon g" title="Google Maps">G</a>'+
+        '<a href="'+wz+'" target="_blank" rel="noopener" class="map-icon w" title="Waze">W</a>'+
+        '</div>';
+    })()+
+    (place.phone ? '<div class="field"><a href="tel:'+place.phone.replace(/\s+/g,'')+'">'+escapeHtml(place.phone)+'</a></div>' : '')+
+    (place.website ? '<div class="field"><a href="'+place.website+'" target="_blank" rel="noopener">Website</a></div>' : '')+
+    '</div>';
+  marker.bindPopup(html);
+  state.prospectMarkers.push(marker);
+  marker.on('popupopen', (e)=>{
+    const addBtn = e.popup._contentNode.querySelector('[data-prospect-add]');
+    const ignoreBtn = e.popup._contentNode.querySelector('[data-prospect-ignore]');
+    if (addBtn) addBtn.addEventListener('click', ()=>{
+      const addrParts = splitDutchAddress(place.address||'');
+      state.manualCompanies.push({
+        accountName: place.name, accountType:'Prospect',
+        street: addrParts.street, postalCode: addrParts.postal, city: addrParts.city,
+        phone: place.phone || null, website: place.website || null, addedAt: new Date()
+      });
+      updateAdditionsCounters();
+      toast(place.name + ' toegevoegd aan downloadlijst.');
+      map.closePopup();
+    });
+    if (ignoreBtn) ignoreBtn.addEventListener('click', ()=>{
+      ignoredProspects.add(place.id);
+      saveIgnoredProspects(ignoredProspects);
+      map.closePopup();
+      map.removeLayer(marker);
+      state.prospectMarkers = state.prospectMarkers.filter(m=>m!==marker);
+      toast(place.name + ' wordt niet meer getoond.');
+    });
+  });
+  if (state.activeTab === 'account') marker.addTo(map);
+}
+function splitDutchAddress(full){
+  // best-effort: "Straat 1, 1234 AB Plaats, Nederland"
+  const parts = full.split(',').map(s=>s.trim()).filter(Boolean);
+  let street = parts[0] || '';
+  let postal = '', city = '';
+  if (parts[1]){
+    const m = /(\d{4}\s?[A-Z]{2})\s*(.*)/.exec(parts[1]);
+    if (m){ postal = m[1]; city = m[2]; } else { city = parts[1]; }
+  }
+  return {street, postal, city};
+}
+
+/* ============================================================
+   Download "Jouw aanvullingen" als 31-koloms Excel (2 tabbladen)
+   ============================================================ */
+function buildBaseRowArray(obj, extra){
+  const map = {
+    accountNumber:obj.accountNumber||'', accountName:obj.accountName||'', accountType:obj.accountType||'',
+    salesman:obj.salesman||'', street:obj.street||'', postalCode:obj.postalCode||'', city:obj.city||'',
+    equipment:obj.equipment||'', scheduledEndDate:'', durationMonths:'', endDate:'',
+    primaryContact:obj.primaryContact||'', phone:obj.phone||'', contractNumberERP:'', contractType:'',
+    monthlyLeaseFee:'', assignmentLeasingFee:'', monthlyOpsFee:'', monthlyRental:'', monthlyFeesSum:'',
+    totalClicksBW:'', totalClicksColor:'', avgClicksBW12m:'', avgClicksColor12m:'', monthlyServicePriceBW:'',
+    monthlyServicePriceColor:'', clickSalesPriceBW:'', clickSalesPriceColor:'', includedClicksBW:'',
+    includedClicksColor:'', equipmentNumber:''
+  };
+  const row = BASE_FIELD_ORDER.map(f=>map[f]);
+  return row.concat(extra);
+}
+
+function downloadAdditions(){
+  if (!state.manualMachines.length && !state.manualCompanies.length){
+    toast('Nog geen aanvullingen om te downloaden.', true); return;
+  }
+  const wb = XLSX.utils.book_new();
+
+  const compHeaders = BASE_31_HEADERS.concat(['Website','Toegevoegd op']);
+  const compRows = [compHeaders].concat(state.manualCompanies.map(c=>buildBaseRowArray(c, [c.website||'', fmtDate(c.addedAt)])));
+  const wsComp = XLSX.utils.aoa_to_sheet(compRows);
+  XLSX.utils.book_append_sheet(wb, wsComp, 'Nieuwe bedrijven');
+
+  const machHeaders = BASE_31_HEADERS.concat(['Opmerking (nieuw)','Toegevoegd op']);
+  const machRows = [machHeaders].concat(state.manualMachines.map(m=>buildBaseRowArray(m, [m.note||'', fmtDate(m.addedAt)])));
+  const wsMach = XLSX.utils.aoa_to_sheet(machRows);
+  XLSX.utils.book_append_sheet(wb, wsMach, 'Nieuwe machines');
+
+  XLSX.writeFile(wb, 'accountRADAR_aanvullingen_'+new Date().toISOString().slice(0,10)+'.xlsx');
+}
+
+/* ============================================================
+   Changelog
+   ============================================================ */
+const CHANGELOG_HTML = ''+
+'<h4>v2.0.0 &mdash; 09-09-2026</h4><ul>'+
+'<li>Login toegevoegd: de tool is nu pas te gebruiken na inloggen met een gebruikersnaam en wachtwoord. Wachtwoorden worden veilig gehasht opgeslagen (bcrypt), nooit leesbaar. Na 3 mislukte pogingen volgt een blokkade van 10 minuten.</li>'+
+'<li>De Google API-sleutel staat niet meer in de browser-code. "Nieuwe bedrijven vinden" loopt nu via een eigen server-functie die eerst controleert of je bent ingelogd, en pas dan de sleutel gebruikt (die alleen op de server bekend is).</li>'+
+'<li>Het handmatige API-sleutelveld in de zijbalk is hierdoor overbodig geworden en verwijderd.</li>'+
+'<li>Uitlogknop toegevoegd bovenin de zijbalk.</li>'+
+'<li>Eerste stap van een groter beveiligingsplan (Fase 1 van 3) — tokensysteem en een beheerpagina volgen later.</li>'+
+'</ul>'+
+'<h4>v1.6.0 &mdash; 01-09-2026</h4><ul>'+
+'<li>"Nieuwe bedrijven vinden" heeft nu een invulveld voor het soort bedrijf. Leeg = de 6 standaard grafische termen; vul je een van die 6 (of een gelijkende term) in, dan wordt alsnog de hele grafische markt gezocht; vul je iets anders in, dan wordt alleen op die term gezocht. Meerdere, komma-gescheiden termen mogen.</li>'+
+'<li>Nieuw postcode-veld (4 cijfers) als alternatief voor de automatische locatiebepaling. Ingevuld: actieradius en prospecting gebruiken die postcode. Leeg: automatische locatie zoals voorheen.</li>'+
+'<li>Volgorde van de tabbladen in de "Jouw aanvullingen"-download omgedraaid: "Nieuwe bedrijven" is nu tabblad 1, "Nieuwe machines" tabblad 2 — handig om de download direct als nieuw bronbestand te hergebruiken.</li>'+
+'</ul>'+
+'<h4>v1.5.2 &mdash; 01-09-2026</h4><ul>'+
+'<li>Scrollen binnen het menu losgekoppeld van het vastgezette menu-paneel zelf (dezelfde soort Safari-eigenaardigheid als eerder, nu ook op deze plek verholpen). Verhelpt: tikken die op de verkeerde knop terechtkwamen, en het niet kunnen dichtklappen van "Locatie-instellingen", op iPhone in liggende stand.</li>'+
+'</ul>'+
+'<h4>v1.5.1 &mdash; 01-09-2026</h4><ul>'+
+'<li>Gedeelde Google API-sleutel centraal ingesteld.</li>'+
+'<li>Het handmatige API-sleutelveld verbergt zichzelf nu automatisch zodra er al een centrale sleutel is ingesteld.</li>'+
+'</ul>'+
+'<h4>v1.5.0 &mdash; 01-09-2026</h4><ul>'+
+'<li>Donker overlay-scherm bij een openstaand mobiel menu verwijderd: de kaart blijft nu altijd volledig bedienbaar (klikken, inzoomen, slepen), ook terwijl het menu openstaat. Sluiten kan via het kruisje of het menu-knopje.</li>'+
+'<li>Menu-knopje op iPhone/iPad in liggende stand hersteld: gebruikt nu een betrouwbaardere schermhoogte-techniek (dvh), zodat de zichtbare positie en de werkelijke klikbare plek weer overeenkomen.</li>'+
+'</ul>'+
+'<h4>v1.4.0 &mdash; 01-09-2026</h4><ul>'+
+'<li>PWA-ondersteuning toegevoegd: via Netlify is de tool nu installeerbaar op telefoon/tablet/laptop met een eigen app-icoon en schermvullende weergave, en blijft gewoon als normale webpagina werken in elke browser.</li>'+
+'<li>Menu-knopje op mobiel/tablet verplaatst, zodat het niet meer over de zoomknoppen van de kaart valt.</li>'+
+'<li>Menu-knopje en de donkere overlay steviger aan het scherm vastgezet, zodat ze niet meer kunnen \"verdwijnen\" tijdens het pannen/scrollen op de kaart (bekende iOS Safari-eigenaardigheid).</li>'+
+'<li>"Leeslink"-veld verwijderd: Google Drive, SharePoint/OneDrive en Dropbox blokkeren dit soort directe koppelingen technisch (CORS), waardoor het veld in de praktijk nooit werkte. Bestanden van deze diensten kun je gewoon via de normale upload-knop kiezen (werkt ook op iPhone/iPad via de cloud-koppeling in de bestandenkiezer).</li>'+
+'</ul>'+
+'<h4>v1.3.1 &mdash; 28-08-2026</h4><ul>'+
+'<li>Glimworm-effect (pulserende gloed bij contracten die snel aflopen) werkt nu ook betrouwbaar op mobiele Safari/Chrome; gebruikt een robuustere animatietechniek.</li>'+
+'<li>Privacy-balk bovenin de kaart verschoven, zodat deze niet meer over de zoomknoppen van de kaart valt, met een vaste minimumafstand tot het logo.</li>'+
+'</ul>'+
+'<h4>v1.3.0 &mdash; 28-08-2026</h4><ul>'+
+'<li>Uitschuifmenu op smallere schermen (&lt; 1280px breed: telefoons en iPads in beide standen): het menu staat standaard dicht en opent als paneel over de kaart via een knop linksboven.</li>'+
+'<li>Een open pop-up van een account blijft nu staan wanneer je van tabblad wisselt (Account/Expiratie/Merk), in plaats van steeds te sluiten.</li>'+
+'</ul>'+
+'<h4>v1.2.1 &mdash; 28-08-2026</h4><ul>'+
+'<li>AVG/GDPR-tekst verplaatst van de zijbalk naar een doorlopende balk bovenin de kaart, over de volle breedte, met het logo aan de rechterkant.</li>'+
+'</ul>'+
+'<h4>v1.2.0 &mdash; 28-08-2026</h4><ul>'+
+'<li>Logo rechtsboven op de kaart flink vergroot (\u00b1 2,5 cm) en verplaatst naar rechts van de tekst, in de hoek.</li>'+
+'<li>"Bestand"-titel verkleind/soberder gestijld, gear-icoontje verwijderd.</li>'+
+'<li>Google API-sleutelblok en Versiegeschiedenis verplaatst naar onderaan de zijbalk, beide klein/onopvallend en standaard dichtgevouwen.</li>'+
+'<li>"Nieuwe bedrijven vinden" staat nu standaard dichtgevouwen bij het opstarten.</li>'+
+'<li>Adres in de pop-up is nu zelf de link naar Apple Kaarten, met kleine iconlinks naar Google Maps en Waze ernaast.</li>'+
+'</ul>'+
+'<h4>v1.1.0 &mdash; 28-08-2026</h4><ul>'+
+'<li>Logo verplaatst naar rechtsboven op de kaart; zijbalk-header is nu een dunne statusregel.</li>'+
+'<li>Google API-sleutelveld verplaatst naar een eigen, standaard dichtgevouwen blokje bovenaan.</li>'+
+'<li>Zoekfunctie ("Zoeken") doorzoekt nu alle klant- en machinegegevens, niet alleen de klantnaam.</li>'+
+'<li>Locatiemarkers verkleind naar het formaat van de prospecting-stipjes.</li>'+
+'<li>Handmatige startlocatie vervangen door automatische geolocatie, gebruikt voor zowel de actieradius als prospecting.</li>'+
+'<li>Prospecting-resultaten worden lokaal gecached per regio (~5 km), zodat eerdere zoekopdrachten ook zonder API-sleutel te bekijken zijn.</li>'+
+'<li>Prospect-popups met compacte iconknoppen (toevoegen / niet meer tonen) en een negeerlijst.</li>'+
+'<li>"Machine toevoegen"-knop nu zichtbaar bij alle accounttypes behalve Customer, alleen op het Merk-tabblad.</li>'+
+'<li>Prospect-resultaten (Google) alleen zichtbaar op het Account-tabblad.</li>'+
+'</ul>'+
+'<h4>v1.0.1 &mdash; 28-08-2026</h4><ul>'+
+'<li>Logo-correctie: kruisdraad-lijnen en de twee "gevonden accounts"-stipjes exact volgens het goedgekeurde ontwerp.</li>'+
+'</ul>'+
+'<h4>v1.0.0 &mdash; 28-08-2026</h4><ul>'+
+'<li>Eerste build.</li>'+
+'</ul>';
+
+document.addEventListener('click', (e)=>{
+  if (e.target.id === 'btnUnlockChangelog'){
+    const pw = document.getElementById('changelogPw').value;
+    if (pw === CONFIG.CHANGELOG_PASSWORD){
+      document.getElementById('changelogLocked').style.display = 'none';
+      const body = document.getElementById('changelogBody');
+      body.style.display = 'block';
+      body.innerHTML = CHANGELOG_HTML;
+    } else {
+      toast('Onjuist wachtwoord.', true);
+    }
+  }
+});
+</script>
+<script>
+/* ============================================================
+   Event wiring
+   ============================================================ */
+// inklappen/uitklappen blokken
+document.addEventListener('click', (e)=>{
+  const t = e.target.closest('.block-title');
+  if (t){
+    const parent = t.closest('.block');
+    if (parent) parent.classList.toggle('collapsed');
+  }
+});
+document.getElementById('blockLocSettings').classList.add('collapsed');
+
+// tabbladen
+document.querySelectorAll('.tab').forEach(tabEl=>{
+  tabEl.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    tabEl.classList.add('active');
+    state.activeTab = tabEl.getAttribute('data-tab');
+    ['account','expiratie','merk'].forEach(t=>{
+      document.getElementById('filterList'+t.charAt(0).toUpperCase()+t.slice(1)).style.display = (t===state.activeTab)?'block':'none';
+    });
+    renderMarkers();
+    updateProspectVisibility();
+  });
+});
+
+// bestand uploaden
+document.getElementById('fileInput').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if (!file) return;
+  const statusEl = document.getElementById('fileStatus');
+  statusEl.innerHTML = '<div class="status-msg status-info">Bestand inlezen...</div>';
+  const reader = new FileReader();
+  reader.onload = (ev)=>{
+    try {
+      const wb = readWorkbookFromArrayBuffer(new Uint8Array(ev.target.result));
+      processWorkbook(wb);
+      statusEl.innerHTML = '<div class="status-msg status-ok">Bestand "'+escapeHtml(file.name)+'" ingelezen.</div>';
+    } catch(err){
+      statusEl.innerHTML = '<div class="status-msg status-err">Kon het bestand niet lezen: '+escapeHtml(err.message||err)+'</div>';
+    }
+  };
+  reader.readAsArrayBuffer(file);
+});
+
+// zoeken
+document.getElementById('searchInput').addEventListener('input', (e)=>{
+  state.searchTerm = e.target.value.trim().toLowerCase();
+  renderMarkers();
+});
+
+// actieradius
+document.getElementById('radiusSlider').addEventListener('input', (e)=>{
+  state.radiusKm = parseInt(e.target.value,10);
+  document.getElementById('radiusVal').textContent = state.radiusKm;
+  updateRadiusCircle();
+  renderMarkers();
+});
+
+function updateRadiusCircle(){
+  if (state.radiusCircle) map.removeLayer(state.radiusCircle);
+  if (!state.startLatLng) return;
+  state.radiusCircle = L.circle([state.startLatLng.lat, state.startLatLng.lng], {
+    radius: state.radiusKm*1000, color: KM_BLUE, weight:1, fillOpacity:0.04
+  }).addTo(map);
+}
+function setStartMarker(){
+  if (state.startMarker) map.removeLayer(state.startMarker);
+  if (!state.startLatLng) return;
+  state.startMarker = L.marker([state.startLatLng.lat, state.startLatLng.lng], {
+    icon: L.divIcon({className:'', html:'<div style="width:14px;height:14px;border-radius:50%;background:'+KM_BLUE+';border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.4);"></div>', iconSize:[14,14], iconAnchor:[7,7]})
+  }).addTo(map);
+}
+
+function applyEffectiveLocation(silent){
+  state.startLatLng = state.postcodeLatLng || state.geoLatLng || null;
+  setStartMarker();
+  updateRadiusCircle();
+  if (state.startLatLng){
+    if (silent) map.setView([state.startLatLng.lat, state.startLatLng.lng], 9);
+    else map.setView([state.startLatLng.lat, state.startLatLng.lng], 10);
+  }
+  renderMarkers();
+  const statusEl = document.getElementById('myLocStatus');
+  if (statusEl && state.startLatLng){
+    statusEl.textContent = state.postcodeLatLng
+      ? 'Postcode ingesteld \u2014 gebruikt voor actieradius en prospecting.'
+      : 'Locatie gevonden \u2014 gebruikt voor actieradius en prospecting.';
+  }
+}
+
+function fetchMyLocation(silent){
+  const statusEl = document.getElementById('myLocStatus');
+  if (!navigator.geolocation){
+    if (statusEl) statusEl.textContent = 'Locatiebepaling wordt niet ondersteund door deze browser.';
+    if (!silent) toast('Locatiebepaling wordt niet ondersteund door deze browser.', true);
+    return;
+  }
+  if (statusEl) statusEl.textContent = 'Locatie bepalen...';
+  navigator.geolocation.getCurrentPosition((pos)=>{
+    state.geoLatLng = {lat: pos.coords.latitude, lng: pos.coords.longitude};
+    applyEffectiveLocation(silent);
+  }, ()=>{
+    if (statusEl) statusEl.textContent = 'Kon je locatie niet bepalen (toestemming geweigerd of niet beschikbaar).';
+    if (!silent) toast('Kon je locatie niet bepalen.', true);
+  });
+}
+document.getElementById('btnRefreshMyLoc').addEventListener('click', (e)=>{ e.preventDefault(); fetchMyLocation(false); });
+
+document.getElementById('postcodeInput').addEventListener('change', async (e)=>{
+  const val = e.target.value.trim();
+  const statusEl = document.getElementById('myLocStatus');
+  if (!val){
+    state.postcodeLatLng = null;
+    applyEffectiveLocation(false);
+    return;
+  }
+  if (!/^[0-9]{4}$/.test(val)){
+    toast('Vul een geldige postcode in (4 cijfers).', true);
+    return;
+  }
+  if (statusEl) statusEl.textContent = 'Postcode opzoeken...';
+  try {
+    let geo = await pdokLookup(val, false);
+    if (!geo){ toast('Kon deze postcode niet vinden.', true); return; }
+    state.postcodeLatLng = geo;
+    applyEffectiveLocation(false);
+  } catch(err){ toast('Kon deze postcode niet opzoeken.', true); }
+});
+fetchMyLocation(true);
+
+// locatie-instellingen
+document.getElementById('btnRegeocode').addEventListener('click', async (e)=>{
+  e.preventDefault();
+  for (const acc of state.accounts){
+    const key = geocodeQueryKey(acc.street, acc.postalCode, acc.city);
+    delete geoCache[key];
+  }
+  saveGeoCache(geoCache);
+  await geocodeAllAccounts();
+  toast('Locaties opnieuw opgezocht.');
+});
+document.getElementById('btnClearCache').addEventListener('click', (e)=>{
+  e.preventDefault();
+  geoCache = {};
+  saveGeoCache(geoCache);
+  toast('Cache gewist.');
+});
+document.getElementById('btnClearIgnored').addEventListener('click', (e)=>{
+  e.preventDefault();
+  ignoredProspects = new Set();
+  saveIgnoredProspects(ignoredProspects);
+  toast('Negeerlijst geleegd. Zoek opnieuw om verborgen bedrijven weer te zien.');
+});
+
+// prospecting
+document.getElementById('btnProspect').addEventListener('click', runProspectSearch);
+
+// download aanvullingen
+document.getElementById('btnDownloadAdditions').addEventListener('click', downloadAdditions);
+
+// uitschuifmenu (mobiel/tablet) - kaart blijft altijd bedienbaar, geen overlay
+const sidebarEl = document.getElementById('sidebar');
+function openSidebar(){ sidebarEl.classList.add('open'); }
+function closeSidebar(){ sidebarEl.classList.remove('open'); }
+document.getElementById('sidebarToggle').addEventListener('click', openSidebar);
+document.getElementById('sidebarCloseBtn').addEventListener('click', closeSidebar);
+
+// PWA: service worker registreren (alleen actief als de tool via een
+// echte website/HTTPS wordt geladen, bijv. via Netlify; op een lokaal
+// gedownload bestand gebeurt hier stilzwijgend niets).
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  });
+}
+
+// venstergrootte
+window.addEventListener('resize', ()=>map.invalidateSize());
+setTimeout(()=>map.invalidateSize(), 300);
+</script>
+</body>
+</html>
