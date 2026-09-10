@@ -1,5 +1,9 @@
 # accountRADAR — changelog
 
+## v4.2.1 — 09-09-2026
+- **Bugfix (beheerpagina):** bij "Saldo/instellingen" accepteerde de accounteinddatum ten onrechte niet-bestaande datums zoals 31-09-2026 (er werd alleen op formaat gecontroleerd, niet op of de datum echt bestaat). Nu wordt de datum écht gevalideerd, inclusief correcte afhandeling van schrikkeljaren.
+- Het zoekveld krijgt nu bij elke paginalaad een willekeurige, steeds andere naam mee — een betrouwbaardere manier om te voorkomen dat Chromium-browsers (o.a. Edge) er zelf een eerder ingelogde gebruikersnaam in blijven voorstellen. `autocomplete="off"` alleen wordt door deze browsers voor gewone tekstvelden namelijk vaak genegeerd; dit is een bekende, betrouwbaardere omweg.
+
 ## v4.2.0 — 09-09-2026
 - **Bugfix:** op het postcodeveld deed de Enter-toets niets (alleen wegklikken uit het veld werkte, via het `change`-event). Enter zoekt nu direct — dit was een echte code-omissie, geen browser- of geolocatie-probleem.
 - **Belgische postcodes ondersteund**, via een apart NL/BE-keuzevakje naast het postcodeveld. Nederlandse en Belgische postcodes kunnen namelijk overlappen (bijv. "2100" bestaat in beide landen), dus in plaats van blind te gokken/terugvallen wordt bij "BE" gericht en uitsluitend binnen België gezocht (via Nominatim/OpenStreetMap), en bij "NL" ongewijzigd via PDOK.

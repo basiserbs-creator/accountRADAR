@@ -263,12 +263,16 @@ function fmtDateOnly(iso){
   return m[3]+'-'+m[2]+'-'+m[1];
 }
 function parseDMY(str){
-  // 'DD-MM-JJJJ' -> 'YYYY-MM-DD', of null (leeg) / undefined (ongeldig)
+  // 'DD-MM-JJJJ' -> 'YYYY-MM-DD', of null (leeg) / undefined (ongeldig formaat OF niet-bestaande datum)
   str = (str||'').trim();
   if (!str) return null;
   const m = /^(\d{2})-(\d{2})-(\d{4})$/.exec(str);
   if (!m) return undefined;
-  return m[3]+'-'+m[2]+'-'+m[1];
+  const day = parseInt(m[1],10), month = parseInt(m[2],10), year = parseInt(m[3],10);
+  if (month < 1 || month > 12) return undefined;
+  const daysInMonth = new Date(year, month, 0).getDate(); // laatste dag van deze maand (houdt vanzelf rekening met schrikkeljaren)
+  if (day < 1 || day > daysInMonth) return undefined;
+  return String(year) + '-' + String(month).padStart(2,'0') + '-' + String(day).padStart(2,'0');
 }
 
 function copyButton(text){
