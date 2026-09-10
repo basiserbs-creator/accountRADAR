@@ -1,5 +1,10 @@
 # accountRADAR — changelog
 
+## v4.1.1 — 09-09-2026
+- Het zoekvak staat nu bovenaan het blok met de tabs (Account/Merk/Expiratie), waar het inhoudelijk bij hoort, in plaats van in het locatieblok.
+- "Zoeken & locatie" heet nu "Locatie-instellingen"; het geneste sub-blokje daarin heet "Geavanceerd" (was ook "Locatie-instellingen", dat gaf dubbele namen).
+- Het oogje bij wachtwoordvelden (geïntroduceerd in v4.1.0) is weer verwijderd na voortschrijdend inzicht — veiliger om wachtwoorden nooit zichtbaar te kunnen maken op een gedeeld scherm. Betreft zowel de hoofdtool als de beheerpagina.
+
 ## v4.1.0 — 09-09-2026
 - **Bugfix:** de cache van eerdere zoekopdrachten naar nieuwe bedrijven (en de negeerlijst) werd gedeeld tussen alle gebruikers op hetzelfde apparaat/browser — dus als gebruiker A zocht, zag gebruiker B op hetzelfde apparaat dezelfde "eerder gevonden"-melding. Beide zijn nu strikt per ingelogde gebruiker gescheiden.
 - **1 actieve sessie per account:** een nieuwe login op een ander apparaat/browser maakt een eerdere sessie van datzelfde account direct ongeldig (geverifieerd met een lokale end-to-end test: login A → login B elders → sessie A direct 401).

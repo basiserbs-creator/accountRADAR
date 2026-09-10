@@ -56,14 +56,6 @@ input, select{
 }
 label{display:block;font-size:11px;font-weight:600;color:var(--text-muted);margin:8px 0 3px;min-height:26px;}
 .formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0 14px;align-items:end;}
-.pw-wrap{position:relative;}
-.pw-wrap input{padding-right:36px;width:100%;}
-.pw-toggle{
-  position:absolute; right:4px; top:50%; transform:translateY(-50%);
-  background:none; border:none; cursor:pointer; font-size:15px; line-height:1;
-  padding:5px; color:var(--text-muted); border-radius:6px;
-}
-.pw-toggle:hover{ background:#f0f0f0; }
 .copy-btn{
   background:none; border:1px solid currentColor; color:inherit; padding:2px 8px;
   font-size:11px; border-radius:6px; cursor:pointer; margin-left:6px; font-weight:600;
@@ -121,10 +113,7 @@ button:disabled{opacity:.55;cursor:default;}
       <label for="loginUsername">Gebruikersnaam</label>
       <input type="text" id="loginUsername" autocomplete="username" required>
       <label for="loginPassword">Wachtwoord</label>
-      <div class="pw-wrap">
-        <input type="password" id="loginPassword" autocomplete="current-password" required>
-        <button type="button" class="pw-toggle" data-target="loginPassword" aria-label="Wachtwoord tonen">&#128065;</button>
-      </div>
+      <input type="password" id="loginPassword" autocomplete="current-password" required>
       <button type="submit" id="loginSubmitBtn">Inloggen</button>
     </form>
     <div id="loginError"></div>
@@ -261,18 +250,6 @@ function parseDMY(str){
   if (!m) return undefined;
   return m[3]+'-'+m[2]+'-'+m[1];
 }
-
-// Oogje in wachtwoordvelden.
-document.querySelectorAll('.pw-toggle').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    const input = document.getElementById(btn.getAttribute('data-target'));
-    if (!input) return;
-    const show = input.type === 'password';
-    input.type = show ? 'text' : 'password';
-    btn.textContent = show ? '\u{1F648}' : '\u{1F441}\uFE0F';
-    btn.setAttribute('aria-label', show ? 'Wachtwoord verbergen' : 'Wachtwoord tonen');
-  });
-});
 
 function copyButton(text){
   const id = 'copy_' + Math.random().toString(36).slice(2);
