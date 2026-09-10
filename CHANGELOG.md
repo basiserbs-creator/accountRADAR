@@ -1,5 +1,13 @@
 # accountRADAR — changelog
 
+## v4.3.0 — 09-09-2026
+- **Bugfix:** de knoppen "toevoegen"/"niet interessant" in een prospect-popup reageerden soms niet, als de popup onder de balk bovenin (AVG-tekst/logo) verscheen — die balk had een hogere weergavelaag (z-index) dan de popups, en onderschepte daardoor de kliks. Verlaagd naar onder het niveau van popups (maar nog boven de kaarttegels).
+- "Zoek bedrijven in deze regio" toont nu direct een "Bezig..."-melding en schakelt de knop kort uit bij een klik, zodat de klik meteen voelbaar is — eerder kon een trage serverstart (1-3 sec.) laten lijken alsof er niets gebeurde.
+- Prijs voor het bekijken van een verlopend contract: 1 → 2 credits.
+- **Popup toont nu ook, voor zover beschikbaar in het gekoppelde bestand:** contractvolume, maandprijs, meerafdrukprijzen en huur/lease/assignment-leasebedrag — zwart-wit en kleur apart waar van toepassing. Deze velden werden al wel ingelezen, maar nergens weergegeven; dat is nu gerepareerd.
+- **Nieuw: "Overige informatie".** Kolommen uit het Excel-bestand die niet aan een bekend veld gekoppeld konden worden, gingen voorheen stilzwijgend verloren. Deze verschijnen nu, ongeacht de kolomnaam, onder een uitklapbaar "Overige informatie"-blokje per machine. Hierdoor werkt de tool met vrijwel elk Excel-formaat, zolang minimaal klantnaam/adres/postcode/plaats herkenbaar zijn — precies zoals besproken.
+- Handleiding bijgewerkt: correcte beschrijving van prospect-markers (wit met blauwe rand, niet oranje), een toelichting over het opbouwen van een CRM-prospectbase, de aangepaste creditprijs, en de regel over het oneindig-teken verwijderd.
+
 ## v4.2.1 — 09-09-2026
 - **Bugfix (beheerpagina):** bij "Saldo/instellingen" accepteerde de accounteinddatum ten onrechte niet-bestaande datums zoals 31-09-2026 (er werd alleen op formaat gecontroleerd, niet op of de datum echt bestaat). Nu wordt de datum écht gevalideerd, inclusief correcte afhandeling van schrikkeljaren.
 - Het zoekveld krijgt nu bij elke paginalaad een willekeurige, steeds andere naam mee — een betrouwbaardere manier om te voorkomen dat Chromium-browsers (o.a. Edge) er zelf een eerder ingelogde gebruikersnaam in blijven voorstellen. `autocomplete="off"` alleen wordt door deze browsers voor gewone tekstvelden namelijk vaak genegeerd; dit is een bekende, betrouwbaardere omweg.
