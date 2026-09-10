@@ -277,8 +277,7 @@ button{
     <div class="block" id="blockFilters">
       <div class="block-body" style="margin-top:0;">
         <label for="searchInput">Zoeken</label>
-        <input type="text" id="searchInput" placeholder="Zoeken...">
-
+        <input type="text" id="searchInput" placeholder="Zoeken..." autocomplete="off">
         <div class="tabs" style="margin-top:12px;">
           <div class="tab active" data-tab="account">Account</div>
           <div class="tab" data-tab="merk">Merk</div>
@@ -298,7 +297,14 @@ button{
         <div id="myLocStatus" class="hint" style="margin-top:2px;">Locatie bepalen...</div>
 
         <label for="postcodeInput" style="margin-top:10px;">Postcode (optioneel, i.p.v. automatische locatie)</label>
-        <input type="text" id="postcodeInput" placeholder="bijv. 6211" maxlength="4" inputmode="numeric" pattern="[0-9]{4}">
+        <div style="display:flex; gap:8px; align-items:stretch;">
+          <input type="text" id="postcodeInput" placeholder="bijv. 6211" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" autocomplete="off" style="flex:1;">
+          <select id="postcodeCountry" style="width:auto; flex:0 0 72px;">
+            <option value="NL" selected>NL</option>
+            <option value="BE">BE</option>
+          </select>
+        </div>
+        <p class="hint" style="margin-top:4px;">Druk op Enter om te zoeken.</p>
 
         <div class="block" id="blockLocSettings" style="border:none;padding:8px 0 0 0;margin:0;">
           <div class="block-title" data-block="blockLocSettings" style="font-size:12px;color:var(--km-blue);">
@@ -318,7 +324,7 @@ button{
       <div class="block-title" data-block="blockProspect"><span>Nieuwe bedrijven vinden</span><span class="car">&#9660;</span></div>
       <div class="block-body">
         <label for="prospectTermInput">Soort bedrijf (optioneel)</label>
-        <input type="text" id="prospectTermInput" placeholder="bijv. notaris, of leeg voor de grafische markt">
+        <input type="text" id="prospectTermInput" placeholder="bijv. notaris, of leeg voor de grafische markt" autocomplete="off">
         <label for="prospectMaxResults">Maximaal aantal resultaten</label>
         <input type="number" id="prospectMaxResults" min="1" max="60" value="20">
         <p class="hint" id="prospectCostHint"></p>
@@ -358,7 +364,7 @@ button{
       <div id="mapLogo">
         <div class="textcol">
           <span class="name">account<span class="hl">RADAR</span></span>
-          <span class="ver">v4.1.1</span>
+          <span class="ver">v4.2.0</span>
         </div>
         <img src="data:image/png;base64,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" alt="">
       </div>
@@ -372,7 +378,7 @@ button{
    accountRADAR - configuratie
    ============================================================ */
 const CONFIG = {
-  VERSION: '4.1.1',
+  VERSION: '4.2.0',
   APP_NAME: 'accountRADAR',
   CHANGELOG_PASSWORD: '1806',
   // De Google Places API-sleutel staat vanaf v2.0.0 NIET meer hier in de
@@ -1765,6 +1771,11 @@ async function downloadAdditions(){
    Changelog
    ============================================================ */
 const CHANGELOG_HTML = ''+
+'<h4>v4.2.0 &mdash; 09-09-2026</h4><ul>'+
+'<li>Bugfix: op het postcodeveld deed de Enter-toets niets (alleen wegklikken werkte). Enter zoekt nu direct.</li>'+
+'<li>Belgische postcodes worden nu ook ondersteund, via een apart NL/BE-keuzevakje naast het postcodeveld (Nederlandse en Belgische postcodes overlappen qua cijfers, dus een keuze voorkomt een verkeerd gevonden adres).</li>'+
+'<li><code>autocomplete="off"</code> toegevoegd aan het zoekveld en enkele andere losse velden, tegen ongewenste automatisch ingevulde tekst van de browser (bijv. een eerder ingelogde gebruikersnaam die per ongeluk in het zoekveld verscheen).</li>'+
+'</ul>'+
 '<h4>v4.1.1 &mdash; 09-09-2026</h4><ul>'+
 '<li>Het zoekvak staat nu bovenaan het blok met de tabs (Account/Merk/Expiratie), waar het inhoudelijk bij hoort, in plaats van in het locatieblok.</li>'+
 '<li>"Zoeken &amp; locatie" heet nu "Locatie-instellingen"; het geneste sub-blokje daarin heet "Geavanceerd" (was ook "Locatie-instellingen", dat gaf dubbele namen).</li>'+
@@ -2015,9 +2026,23 @@ function fetchMyLocation(silent){
 }
 document.getElementById('btnRefreshMyLoc').addEventListener('click', (e)=>{ e.preventDefault(); fetchMyLocation(false); });
 
-document.getElementById('postcodeInput').addEventListener('change', async (e)=>{
-  const val = e.target.value.trim();
+async function nominatimPostcodeLookup(postcode, countryCode){
+  const url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&postalcode='
+    + encodeURIComponent(postcode) + '&countrycodes=' + encodeURIComponent(countryCode.toLowerCase());
+  const res = await fetch(url, { headers: { 'Accept-Language': 'nl' } });
+  if (!res.ok) return null;
+  const data = await res.json();
+  if (!data || !data.length) return null;
+  return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+}
+
+async function handlePostcodeLookup(){
+  const input = document.getElementById('postcodeInput');
+  const countrySel = document.getElementById('postcodeCountry');
+  const val = input.value.trim();
+  const country = countrySel ? countrySel.value : 'NL';
   const statusEl = document.getElementById('myLocStatus');
+
   if (!val){
     state.postcodeLatLng = null;
     applyEffectiveLocation(false);
@@ -2029,13 +2054,35 @@ document.getElementById('postcodeInput').addEventListener('change', async (e)=>{
   }
   if (statusEl) statusEl.textContent = 'Postcode opzoeken...';
   try {
-    let geo = await pdokLookup(val, 'postcode');
-    if (!geo) geo = await pdokLookup(val, false); // fallback: vrij zoeken, mocht het type-filter niets vinden
+    let geo;
+    if (country === 'BE'){
+      // Nederlandse en Belgische postcodes overlappen qua cijfers (bv. 2100
+      // bestaat in beide landen) - daarom hier NIET via PDOK (dat is
+      // uitsluitend Nederland en zou een fout adres kunnen vinden), maar
+      // rechtstreeks en uitsluitend binnen België zoeken.
+      geo = await nominatimPostcodeLookup(val, 'BE');
+    } else {
+      geo = await pdokLookup(val, 'postcode');
+      if (!geo) geo = await pdokLookup(val, false); // fallback: vrij zoeken, mocht het type-filter niets vinden
+    }
     if (!geo){ toast('Kon deze postcode niet vinden.', true); return; }
     state.postcodeLatLng = geo;
     applyEffectiveLocation(false);
   } catch(err){ toast('Kon deze postcode niet opzoeken.', true); }
+}
+
+document.getElementById('postcodeInput').addEventListener('change', handlePostcodeLookup);
+document.getElementById('postcodeInput').addEventListener('keydown', (e)=>{
+  if (e.key === 'Enter'){
+    e.preventDefault();
+    handlePostcodeLookup();
+  }
 });
+document.getElementById('postcodeCountry').addEventListener('change', ()=>{
+  // Bij wisselen van land meteen opnieuw opzoeken als er al een postcode staat.
+  if (document.getElementById('postcodeInput').value.trim()) handlePostcodeLookup();
+});
+
 fetchMyLocation(true);
 
 // locatie-instellingen

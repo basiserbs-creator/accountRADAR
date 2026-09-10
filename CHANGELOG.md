@@ -1,5 +1,14 @@
 # accountRADAR — changelog
 
+## v4.2.0 — 09-09-2026
+- **Bugfix:** op het postcodeveld deed de Enter-toets niets (alleen wegklikken uit het veld werkte, via het `change`-event). Enter zoekt nu direct — dit was een echte code-omissie, geen browser- of geolocatie-probleem.
+- **Belgische postcodes ondersteund**, via een apart NL/BE-keuzevakje naast het postcodeveld. Nederlandse en Belgische postcodes kunnen namelijk overlappen (bijv. "2100" bestaat in beide landen), dus in plaats van blind te gokken/terugvallen wordt bij "BE" gericht en uitsluitend binnen België gezocht (via Nominatim/OpenStreetMap), en bij "NL" ongewijzigd via PDOK.
+- `autocomplete="off"` toegevoegd aan het zoekveld en de vrije-tekst-zoekterm bij prospecting, tegen ongewenste automatisch ingevulde tekst van de browser (bijv. Edge dat een eerder ingelogde gebruikersnaam liet verschijnen in het zoekveld).
+- **Beheerpagina:**
+  - Nieuw overzicht "Totaal verbruik per gebruiker" boven het activiteitenlog, gebaseerd op het altijd-correcte bijgehouden totaal per gebruiker (niet beperkt tot de laatste 500 logregels).
+  - Kolommen in de gebruikerstabel zijn nu ook klikbaar sorteerbaar (zelfde manier als het activiteitenlog al had).
+  - Het klantveld bij "Nieuwe gebruiker aanmaken" toont nu suggesties uit bestaande klanten tijdens het typen (een nieuwe klantnaam intypen blijft gewoon mogelijk).
+
 ## v4.1.1 — 09-09-2026
 - Het zoekvak staat nu bovenaan het blok met de tabs (Account/Merk/Expiratie), waar het inhoudelijk bij hoort, in plaats van in het locatieblok.
 - "Zoeken & locatie" heet nu "Locatie-instellingen"; het geneste sub-blokje daarin heet "Geavanceerd" (was ook "Locatie-instellingen", dat gaf dubbele namen).

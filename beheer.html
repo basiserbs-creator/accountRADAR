@@ -150,7 +150,8 @@ button:disabled{opacity:.55;cursor:default;}
             </div>
             <div>
               <label for="cuKlant">Klant</label>
-              <input type="text" id="cuKlant" placeholder="bijv. AC12 - Bedrijfsnaam" required>
+              <input type="text" id="cuKlant" placeholder="bijv. AC12 - Bedrijfsnaam" list="klantOptions" required>
+              <datalist id="klantOptions"></datalist>
             </div>
             <div>
               <label for="cuPassword">Wachtwoord (leeg = automatisch genereren)</label>
@@ -184,7 +185,15 @@ button:disabled{opacity:.55;cursor:default;}
           <table id="usersTable">
             <thead>
               <tr>
-                <th>Gebruiker</th><th>Klant</th><th>Status</th><th>Billing</th><th>Saldo</th><th>Verbruik</th><th>Einddatum</th><th>Laatste login</th><th>Acties</th>
+                <th class="sortable" data-sort="username">Gebruiker <span class="arrow">&#9650;</span></th>
+                <th class="sortable" data-sort="klant">Klant <span class="arrow"></span></th>
+                <th class="sortable" data-sort="active">Status <span class="arrow"></span></th>
+                <th class="sortable" data-sort="billingMode">Billing <span class="arrow"></span></th>
+                <th class="sortable" data-sort="balance">Saldo <span class="arrow"></span></th>
+                <th class="sortable" data-sort="totalUsed">Verbruik <span class="arrow"></span></th>
+                <th class="sortable" data-sort="accountEnd">Einddatum <span class="arrow"></span></th>
+                <th class="sortable" data-sort="lastLogin">Laatste login <span class="arrow"></span></th>
+                <th>Acties</th>
               </tr>
             </thead>
             <tbody id="usersTbody"></tbody>
@@ -196,8 +205,19 @@ button:disabled{opacity:.55;cursor:default;}
 
     <div id="secLog" class="section">
       <div class="card">
+        <h2>Totaal verbruik per gebruiker</h2>
+        <p class="card-sub">Gebaseerd op het bijgehouden totaal-verbruik per gebruiker (blijft correct, ook als een logregel ooit uit het activiteitenlog hieronder verdwijnt).</p>
+        <div class="tablewrap">
+          <table id="usageTable">
+            <thead><tr><th>Gebruiker</th><th>Klant</th><th>Totaal verbruikt</th></tr></thead>
+            <tbody id="usageTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
         <h2>Activiteitenlog</h2>
-        <p class="card-sub">Alleen metadata: gebruiker, actietype, tijdstip en creditkosten — nooit de inhoud van bestanden, zoekresultaten of exports.</p>
+        <p class="card-sub">Alleen metadata: gebruiker, actietype, tijdstip en creditkosten — nooit de inhoud van bestanden, zoekresultaten of exports. Toont de laatste 500 regels.</p>
         <button class="secondary" id="btnRefreshLog">Vernieuwen</button>
         <div class="tablewrap" style="margin-top:12px;">
           <table id="logTable">
@@ -345,22 +365,76 @@ document.querySelectorAll('.tabbtn').forEach(btn=>{
 /* ============================================================
    Gebruikers
    ============================================================ */
+let currentUsers = [];
+let usersSortField = 'username';
+let usersSortDir = 'asc';
+
 async function loadUsers(){
   const msgEl = document.getElementById('usersListMsg');
   try {
     const res = await fetch('/.netlify/functions/admin-list-users');
     const data = await res.json();
     if (!res.ok){ msgEl.innerHTML = '<div class="msg msg-err">'+escapeHtml(data.error||'Kon gebruikers niet laden.')+'</div>'; return; }
-    renderUsers(data.users || []);
+    currentUsers = data.users || [];
+    renderUsers();
+    populateKlantOptions();
+    renderUsageTable();
     msgEl.innerHTML = '';
   } catch(e){
     msgEl.innerHTML = '<div class="msg msg-err">Kon gebruikers niet laden.</div>';
   }
 }
 
-function renderUsers(users){
+function populateKlantOptions(){
+  const dl = document.getElementById('klantOptions');
+  if (!dl) return;
+  const klanten = Array.from(new Set(currentUsers.map(u=>u.klant).filter(Boolean))).sort((a,b)=>a.localeCompare(b));
+  dl.innerHTML = klanten.map(k=>'<option value="'+escapeHtml(k)+'"></option>').join('');
+}
+
+function renderUsageTable(){
+  const tbody = document.getElementById('usageTbody');
+  if (!tbody) return;
+  const sorted = currentUsers.slice().sort((a,b)=> (b.totalUsed||0) - (a.totalUsed||0));
+  if (!sorted.length){ tbody.innerHTML = '<tr><td colspan="3">Nog geen gebruikers.</td></tr>'; return; }
+  tbody.innerHTML = sorted.map(u=>
+    '<tr><td>'+escapeHtml(u.username)+'</td><td>'+escapeHtml(u.klant||'—')+'</td><td>'+(u.totalUsed||0)+' cr.</td></tr>'
+  ).join('');
+}
+
+document.querySelectorAll('#usersTable th.sortable').forEach(th=>{
+  th.addEventListener('click', ()=>{
+    const field = th.getAttribute('data-sort');
+    if (usersSortField === field){
+      usersSortDir = usersSortDir === 'asc' ? 'desc' : 'asc';
+    } else {
+      usersSortField = field;
+      usersSortDir = 'asc';
+    }
+    document.querySelectorAll('#usersTable th.sortable').forEach(x=>{
+      x.classList.remove('sort-asc','sort-desc');
+      x.querySelector('.arrow').textContent = '';
+    });
+    th.classList.add(usersSortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+    th.querySelector('.arrow').textContent = usersSortDir === 'asc' ? '\u25B2' : '\u25BC';
+    renderUsers();
+  });
+});
+
+function renderUsers(){
   const tbody = document.getElementById('usersTbody');
   tbody.innerHTML = '';
+  const users = currentUsers.slice().sort((a,b)=>{
+    let av = a[usersSortField], bv = b[usersSortField];
+    if (usersSortField === 'balance'){ av = a.billingMode==='onbeperkt' ? Infinity : (a.balance||0); bv = b.billingMode==='onbeperkt' ? Infinity : (b.balance||0); }
+    if (usersSortField === 'active'){ av = a.active?1:0; bv = b.active?1:0; }
+    if (typeof av === 'string' || typeof bv === 'string'){
+      av = String(av==null?'':av).toLowerCase(); bv = String(bv==null?'':bv).toLowerCase();
+      return usersSortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    }
+    av = av==null?0:av; bv = bv==null?0:bv;
+    return usersSortDir === 'asc' ? av-bv : bv-av;
+  });
   for (const u of users){
     const tr = document.createElement('tr');
     const statusBadge = u.active
