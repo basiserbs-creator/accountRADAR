@@ -1,4 +1,4 @@
-const { getSession } = require('./_auth');
+const { getLiveSession } = require('./_auth');
 const {
   getUser, saveUser, sweepExpiredReservations,
   loadReservationIndex, saveReservationIndex,
@@ -9,8 +9,8 @@ exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method not allowed' };
   }
-  const session = getSession(event);
-  if (!session) {
+  const live = await getLiveSession(event);
+  if (!live) {
     return { statusCode: 401, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Niet ingelogd.' }) };
   }
 
@@ -29,7 +29,7 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Ontbrekende of ongeldige velden.' }) };
   }
 
-  const username = session.username;
+  const username = live.session.username;
   await sweepExpiredReservations(username);
 
   // Dezelfde actiecode nooit tweemaal verwerken (voorkomt dubbele afschrijving
@@ -39,6 +39,7 @@ exports.handler = async (event) => {
     return { statusCode: 200, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ok: true, alreadyReserved: true }) };
   }
 
+  // Saldo kan door sweepExpiredReservations net zijn aangepast - vers ophalen.
   const user = await getUser(username);
   if (!user) {
     return { statusCode: 404, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Gebruiker niet gevonden.' }) };

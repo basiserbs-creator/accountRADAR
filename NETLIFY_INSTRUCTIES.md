@@ -92,6 +92,12 @@ via de server werken zonder dat je ergens een sleutel hoeft in te vullen.
 
 ## Daarna: updates doorvoeren
 
+**Specifiek voor de update naar v4.1.0:** geen nieuwe environment variables.
+Upload de bijgewerkte `index.html` en `beheer.html`, en de nieuwe
+`netlify/functions/admin-delete-user.js` (plus de aangepaste `_auth.js`,
+`login.js` en enkele andere Functions), en trigger een nieuwe deploy. Geen
+nieuwe setup-link nodig.
+
 **Specifiek voor de update naar v4.0.0 (beheerpagina):** de bestaande
 environment variables blijven allemaal ongewijzigd — geen nieuwe nodig. Wel:
 1. Upload alle bestanden (inclusief het nieuwe `beheer.html` en de nieuwe

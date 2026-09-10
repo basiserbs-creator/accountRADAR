@@ -1,11 +1,11 @@
-const { getSession } = require('./_auth');
+const { getLiveSession } = require('./_auth');
 
 // Geeft de sessie terug als het een geldige, ingelogde beheerder is,
-// anders null. Gebruik: const session = requireAdmin(event); if (!session) return 403;
-function requireAdmin(event) {
-  const session = getSession(event);
-  if (!session || session.isAdmin !== true) return null;
-  return session;
+// anders null. Gebruik: const session = await requireAdmin(event); if (!session) return 403;
+async function requireAdmin(event) {
+  const live = await getLiveSession(event);
+  if (!live || live.session.isAdmin !== true) return null;
+  return live.session;
 }
 
 function generatePassword() {

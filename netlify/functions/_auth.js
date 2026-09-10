@@ -2,6 +2,8 @@
 // Wordt NIET los aangeroepen als endpoint (begint met _), alleen intern gebruikt.
 
 const jwt = require('jsonwebtoken');
+const { usersStore } = require('./_store');
+const { isAccountExpired } = require('./_accountdate');
 
 const COOKIE_NAME = 'ar_session';
 const SESSION_HOURS = 8;
@@ -37,6 +39,9 @@ function clearSessionCookie() {
   return COOKIE_NAME + '=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0';
 }
 
+// Alleen het inlogbewijs (JWT) zelf controleren - snel, geen Blobs-aanroep,
+// maar houdt geen rekening met een nieuwere login elders of een
+// tussentijdse blokkade.
 function getSession(event) {
   const header = (event.headers && (event.headers.cookie || event.headers.Cookie)) || '';
   const cookies = parseCookies(header);
@@ -49,4 +54,28 @@ function getSession(event) {
   }
 }
 
-module.exports = { COOKIE_NAME, makeSessionCookie, clearSessionCookie, getSession };
+// Volledige, "live" controle: geldig inlogbewijs, EN dit is nog steeds de
+// meest recente login voor dit account (voor "1 actieve sessie per
+// account"), EN het account is niet inmiddels geblokkeerd of verlopen.
+// Kost één extra Blobs-leesactie per aanroep, bewust geaccepteerd omdat
+// "1 sessie per account" niet zonder een live-controle kan werken: het hele
+// punt is dat een nieuwere login elders een oudere sessie direct laat
+// stoppen.
+async function getLiveSession(event) {
+  const session = getSession(event);
+  if (!session) return null;
+
+  const store = usersStore();
+  const json = await store.get(session.username);
+  if (!json) return null;
+  let user;
+  try { user = JSON.parse(json); } catch (e) { return null; }
+
+  if (user.active === false) return null;
+  if (isAccountExpired(user.accountEnd)) return null;
+  if (!session.sessionId || session.sessionId !== user.currentSessionId) return null;
+
+  return { session: session, user: user };
+}
+
+module.exports = { COOKIE_NAME, makeSessionCookie, clearSessionCookie, getSession, getLiveSession };

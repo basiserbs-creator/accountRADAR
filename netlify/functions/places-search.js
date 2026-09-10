@@ -1,8 +1,8 @@
-const { getSession } = require('./_auth');
+const { getLiveSession } = require('./_auth');
 
 exports.handler = async (event) => {
-  const session = getSession(event);
-  if (!session) {
+  const live = await getLiveSession(event);
+  if (!live) {
     return {
       statusCode: 401,
       headers: { 'Content-Type': 'application/json' },

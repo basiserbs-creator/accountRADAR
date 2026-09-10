@@ -1,5 +1,18 @@
 # accountRADAR — changelog
 
+## v4.1.0 — 09-09-2026
+- **Bugfix:** de cache van eerdere zoekopdrachten naar nieuwe bedrijven (en de negeerlijst) werd gedeeld tussen alle gebruikers op hetzelfde apparaat/browser — dus als gebruiker A zocht, zag gebruiker B op hetzelfde apparaat dezelfde "eerder gevonden"-melding. Beide zijn nu strikt per ingelogde gebruiker gescheiden.
+- **1 actieve sessie per account:** een nieuwe login op een ander apparaat/browser maakt een eerdere sessie van datzelfde account direct ongeldig (geverifieerd met een lokale end-to-end test: login A → login B elders → sessie A direct 401).
+- **Automatisch uitloggen na 15 minuten inactiviteit** in de pagina zelf (schakel je naar een andere app of tabblad, dan telt de klok gewoon door), met een waarschuwing 1 minuut van tevoren. Bij uitloggen wordt ook meteen de in het geheugen geladen klantdata gewist.
+- Oogje toegevoegd aan het wachtwoordveld bij het inloggen (tonen/verbergen), zowel in de hoofdtool als op de beheerpagina.
+- **Beheerpagina:**
+  - Gebruikers/klanten kunnen nu verwijderd worden (nieuwe Function `admin-delete-user`, met bevestigingsvraag; een beheerder kan zichzelf niet verwijderen).
+  - Kopieerknop bij elk getoond gegenereerd wachtwoord.
+  - Activiteitenlog: kolommen zijn nu klikbaar sorteerbaar.
+  - Datums overal in DD-MM-JJJJ in plaats van de ruwe YYYY-MM-DD-vorm.
+  - Uitlijning van de invoervelden in het aanmaakformulier rechtgetrokken (labels van verschillende lengte lieten voorheen de velden verspringen).
+- **Technische kanttekening:** "1 sessie per account" vereist dat sessies voortaan bij élke actie live tegen de opgeslagen gebruikersgegevens gecontroleerd worden (1 extra Blobs-leesactie per verzoek) — dit is dus een uitzondering op de eerder afgesproken "optie A" (geen live-controle) voor wachtwoordreset, die zelf ongewijzigd blijft: een reset maakt bestaande sessies nog steeds niet direct ongeldig.
+
 ## v4.0.0 — 09-09-2026 (Fase 3 van het beveiligingsplan: beheerpagina)
 - **Beheerpagina toegevoegd** op `/beheer`: klanten/gebruikers aanmaken, saldo en billing_mode aanpassen, gebruikers blokkeren/deblokkeren, wachtwoorden resetten, en een activiteitenlog bekijken.
 - **Activiteitenlog**: registreert voortaan bij elke afgeschreven actie wie, welke actie, wanneer en hoeveel credits — uitsluitend metadata, nooit de inhoud van Excel-bestanden, zoekresultaten of exports.

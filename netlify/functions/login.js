@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const { usersStore } = require('./_store');
 const { makeSessionCookie } = require('./_auth');
 const { isAccountExpired } = require('./_accountdate');
@@ -73,9 +74,14 @@ exports.handler = async (event) => {
   user.failedAttempts = 0;
   user.lockedUntil = null;
   user.lastLogin = Date.now();
+  // Nieuwe sessie-id: maakt een eventuele oudere, nog actieve sessie van
+  // dit account elders (ander apparaat/browser) direct ongeldig - "1
+  // actieve sessie per account".
+  const sessionId = crypto.randomUUID ? crypto.randomUUID() : (Date.now() + '-' + Math.random().toString(36).slice(2));
+  user.currentSessionId = sessionId;
   await store.set(username, JSON.stringify(user));
 
-  const cookie = makeSessionCookie({ username: username, klant: user.klant || null, isAdmin: user.isAdmin === true });
+  const cookie = makeSessionCookie({ username: username, klant: user.klant || null, isAdmin: user.isAdmin === true, sessionId: sessionId });
 
   return {
     statusCode: 200,

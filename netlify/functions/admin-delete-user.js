@@ -21,37 +21,17 @@ exports.handler = async (event) => {
   if (!username) {
     return { statusCode: 400, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Gebruikersnaam ontbreekt.' }) };
   }
+  if (username === session.username) {
+    return { statusCode: 400, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Je kunt je eigen beheeraccount niet verwijderen.' }) };
+  }
 
   const store = usersStore();
-  const json = await store.get(username);
-  if (!json) {
+  const existing = await store.get(username);
+  if (!existing) {
     return { statusCode: 404, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Gebruiker niet gevonden.' }) };
   }
-  const user = JSON.parse(json);
 
-  // Alleen meegegeven velden aanpassen.
-  if (body.billingMode === 'normaal' || body.billingMode === 'onbeperkt') {
-    user.billingMode = body.billingMode;
-    if (user.billingMode === 'onbeperkt') user.balance = null;
-    else if (user.balance == null) user.balance = 0;
-  }
-  if (body.balance !== undefined && user.billingMode !== 'onbeperkt') {
-    user.balance = Math.max(0, Number(body.balance) || 0);
-  }
-  if (body.startBalance !== undefined && user.billingMode !== 'onbeperkt') {
-    user.startBalance = Math.max(0, Number(body.startBalance) || 0);
-  }
-  if (body.accountEnd !== undefined) {
-    user.accountEnd = body.accountEnd ? String(body.accountEnd) : null;
-  }
-  if (body.active !== undefined) {
-    user.active = body.active !== false;
-  }
-  if (body.klant !== undefined && String(body.klant).trim()) {
-    user.klant = String(body.klant).trim();
-  }
-
-  await store.set(username, JSON.stringify(user));
+  await store.delete(username);
 
   return {
     statusCode: 200,

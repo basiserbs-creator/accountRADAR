@@ -1,4 +1,4 @@
-const { getSession } = require('./_auth');
+const { getLiveSession } = require('./_auth');
 const {
   getUser, saveUser,
   getReservation, saveReservation,
@@ -10,8 +10,8 @@ exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method not allowed' };
   }
-  const session = getSession(event);
-  if (!session) {
+  const live = await getLiveSession(event);
+  if (!live) {
     return { statusCode: 401, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Niet ingelogd.' }) };
   }
 
@@ -29,7 +29,7 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Ontbrekende of ongeldige velden.' }) };
   }
 
-  const username = session.username;
+  const username = live.session.username;
   const r = await getReservation(username, actionCode);
   if (!r) {
     return { statusCode: 404, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Reservering niet gevonden (mogelijk al verwerkt of verlopen).' }) };

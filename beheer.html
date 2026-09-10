@@ -54,8 +54,25 @@ tr:last-child td{border-bottom:none;}
 input, select{
   padding:8px 10px;border:1px solid #ccc;border-radius:7px;font-size:13px;width:100%;
 }
-label{display:block;font-size:11px;font-weight:600;color:var(--text-muted);margin:8px 0 3px;}
-.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0 14px;}
+label{display:block;font-size:11px;font-weight:600;color:var(--text-muted);margin:8px 0 3px;min-height:26px;}
+.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0 14px;align-items:end;}
+.pw-wrap{position:relative;}
+.pw-wrap input{padding-right:36px;width:100%;}
+.pw-toggle{
+  position:absolute; right:4px; top:50%; transform:translateY(-50%);
+  background:none; border:none; cursor:pointer; font-size:15px; line-height:1;
+  padding:5px; color:var(--text-muted); border-radius:6px;
+}
+.pw-toggle:hover{ background:#f0f0f0; }
+.copy-btn{
+  background:none; border:1px solid currentColor; color:inherit; padding:2px 8px;
+  font-size:11px; border-radius:6px; cursor:pointer; margin-left:6px; font-weight:600;
+}
+.copy-btn:hover{ opacity:.8; }
+th.sortable{cursor:pointer; user-select:none;}
+th.sortable:hover{color:var(--km-blue);}
+th.sortable .arrow{opacity:.4; margin-left:2px;}
+th.sortable.sort-asc .arrow, th.sortable.sort-desc .arrow{opacity:1;}
 button{
   padding:8px 14px;border-radius:8px;border:none;background:var(--km-blue);color:#fff;font-size:13px;font-weight:600;cursor:pointer;
 }
@@ -104,7 +121,10 @@ button:disabled{opacity:.55;cursor:default;}
       <label for="loginUsername">Gebruikersnaam</label>
       <input type="text" id="loginUsername" autocomplete="username" required>
       <label for="loginPassword">Wachtwoord</label>
-      <input type="password" id="loginPassword" autocomplete="current-password" required>
+      <div class="pw-wrap">
+        <input type="password" id="loginPassword" autocomplete="current-password" required>
+        <button type="button" class="pw-toggle" data-target="loginPassword" aria-label="Wachtwoord tonen">&#128065;</button>
+      </div>
       <button type="submit" id="loginSubmitBtn">Inloggen</button>
     </form>
     <div id="loginError"></div>
@@ -192,7 +212,13 @@ button:disabled{opacity:.55;cursor:default;}
         <button class="secondary" id="btnRefreshLog">Vernieuwen</button>
         <div class="tablewrap" style="margin-top:12px;">
           <table id="logTable">
-            <thead><tr><th>Tijdstip</th><th>Gebruiker</th><th>Klant</th><th>Actie</th><th>Credits</th></tr></thead>
+            <thead><tr>
+              <th class="sortable" data-sort="timestamp">Tijdstip <span class="arrow">&#9662;</span></th>
+              <th class="sortable" data-sort="username">Gebruiker <span class="arrow"></span></th>
+              <th class="sortable" data-sort="klant">Klant <span class="arrow"></span></th>
+              <th class="sortable" data-sort="actionType">Actie <span class="arrow"></span></th>
+              <th class="sortable" data-sort="tokens">Credits <span class="arrow"></span></th>
+            </tr></thead>
             <tbody id="logTbody"></tbody>
           </table>
         </div>
@@ -220,6 +246,59 @@ const ACTION_LABELS = {
 function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function fmtDateTime(ts){ if (!ts) return '—'; return new Date(ts).toLocaleString('nl-NL'); }
 function fmtDate(ts){ if (!ts) return '—'; return new Date(ts).toLocaleDateString('nl-NL'); }
+function fmtDateOnly(iso){
+  // 'YYYY-MM-DD' (zoals opgeslagen/verstuurd) -> 'DD-MM-JJJJ' (zoals getoond)
+  if (!iso) return '—';
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  if (!m) return escapeHtml(iso);
+  return m[3]+'-'+m[2]+'-'+m[1];
+}
+function parseDMY(str){
+  // 'DD-MM-JJJJ' -> 'YYYY-MM-DD', of null (leeg) / undefined (ongeldig)
+  str = (str||'').trim();
+  if (!str) return null;
+  const m = /^(\d{2})-(\d{2})-(\d{4})$/.exec(str);
+  if (!m) return undefined;
+  return m[3]+'-'+m[2]+'-'+m[1];
+}
+
+// Oogje in wachtwoordvelden.
+document.querySelectorAll('.pw-toggle').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const input = document.getElementById(btn.getAttribute('data-target'));
+    if (!input) return;
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    btn.textContent = show ? '\u{1F648}' : '\u{1F441}\uFE0F';
+    btn.setAttribute('aria-label', show ? 'Wachtwoord verbergen' : 'Wachtwoord tonen');
+  });
+});
+
+function copyButton(text){
+  const id = 'copy_' + Math.random().toString(36).slice(2);
+  setTimeout(()=>{
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    btn.addEventListener('click', ()=>{
+      navigator.clipboard.writeText(text).then(()=>{
+        btn.textContent = 'Gekopieerd!';
+        setTimeout(()=>{ btn.textContent = 'Kopieer'; }, 1500);
+      }).catch(()=>{ btn.textContent = 'Kon niet kopiëren'; });
+    });
+  }, 0);
+  return '<button type="button" class="copy-btn" id="'+id+'">Kopieer</button>';
+}
+
+let isLoggedInAdmin = false;
+
+function enterDashboard(username){
+  loginOverlay.classList.add('hidden');
+  dashboard.style.display = 'block';
+  userInfoName.textContent = 'Ingelogd als ' + username;
+  isLoggedInAdmin = true;
+  loadUsers();
+  resetInactivityTimer();
+}
 
 async function checkSession(){
   try {
@@ -231,10 +310,7 @@ async function checkSession(){
       accessDenied.style.display = 'block';
       return;
     }
-    loginOverlay.classList.add('hidden');
-    dashboard.style.display = 'block';
-    userInfoName.textContent = 'Ingelogd als ' + data.username;
-    loadUsers();
+    enterDashboard(data.username);
   } catch(e){
     loginOverlay.classList.remove('hidden');
   }
@@ -259,10 +335,7 @@ loginForm.addEventListener('submit', async (e)=>{
         loginOverlay.classList.add('hidden');
         accessDenied.style.display = 'block';
       } else {
-        loginOverlay.classList.add('hidden');
-        dashboard.style.display = 'block';
-        userInfoName.textContent = 'Ingelogd als ' + data.username;
-        loadUsers();
+        enterDashboard(data.username);
       }
     } else {
       loginError.textContent = data.error || 'Inloggen mislukt.';
@@ -326,7 +399,7 @@ function renderUsers(users){
       '<td>'+(u.billingMode==='onbeperkt'?'Onbeperkt':'Normaal')+'</td>'+
       '<td>'+balanceText+'</td>'+
       '<td>'+u.totalUsed+' cr.</td>'+
-      '<td>'+(u.accountEnd ? escapeHtml(u.accountEnd) : '—')+'</td>'+
+      '<td>'+(u.accountEnd ? fmtDateOnly(u.accountEnd) : '—')+'</td>'+
       '<td>'+fmtDateTime(u.lastLogin)+'</td>'+
       '<td></td>';
     const actionsTd = tr.lastElementChild;
@@ -351,8 +424,32 @@ function renderUsers(users){
     resetBtn.addEventListener('click', ()=>resetPassword(u));
     rowBtns.appendChild(resetBtn);
 
+    if (!u.isAdmin){
+      const delBtn = document.createElement('button');
+      delBtn.className = 'danger'; delBtn.textContent = 'Verwijderen';
+      delBtn.addEventListener('click', ()=>deleteUser(u));
+      rowBtns.appendChild(delBtn);
+    }
+
     actionsTd.appendChild(rowBtns);
     tbody.appendChild(tr);
+  }
+}
+
+async function deleteUser(u){
+  const msgEl = document.getElementById('usersListMsg');
+  const sure = confirm('Weet je zeker dat je "'+u.username+'" ('+  (u.klant||'—') +') wilt verwijderen? Dit kan niet ongedaan gemaakt worden.');
+  if (!sure) return;
+  const res = await fetch('/.netlify/functions/admin-delete-user', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ username: u.username })
+  });
+  const data = await res.json().catch(()=>({}));
+  if (res.ok){
+    msgEl.innerHTML = '<div class="msg msg-ok">'+escapeHtml(u.username)+' is verwijderd.</div>';
+    loadUsers();
+  } else {
+    msgEl.innerHTML = '<div class="msg msg-err">'+escapeHtml(data.error||'Verwijderen mislukt.')+'</div>';
   }
 }
 
@@ -381,7 +478,7 @@ async function resetPassword(u){
   });
   const data = await res.json().catch(()=>({}));
   if (res.ok){
-    const shown = data.generatedPassword ? (' Nieuw wachtwoord: <b>'+escapeHtml(data.generatedPassword)+'</b> — noteer dit nu, het wordt niet opnieuw getoond.') : ' Wachtwoord is aangepast.';
+    const shown = data.generatedPassword ? (' Nieuw wachtwoord: <b>'+escapeHtml(data.generatedPassword)+'</b>'+copyButton(data.generatedPassword)+' — noteer dit nu, het wordt niet opnieuw getoond.') : ' Wachtwoord is aangepast.';
     msgEl.innerHTML = '<div class="msg msg-ok">Wachtwoord van '+escapeHtml(u.username)+' gereset.'+shown+'</div>';
   } else {
     msgEl.innerHTML = '<div class="msg msg-err">'+escapeHtml(data.error||'Mislukt.')+'</div>';
@@ -392,10 +489,12 @@ function openEditUser(u){
   const msgEl = document.getElementById('usersListMsg');
   const newBalance = u.billingMode === 'onbeperkt' ? null : prompt('Nieuw saldo voor '+u.username+' (huidig: '+u.balance+'):', u.balance);
   if (u.billingMode !== 'onbeperkt' && newBalance === null) return; // geannuleerd
-  const newEnd = prompt('Accounteinddatum voor '+u.username+' (YYYY-MM-DD, leeg = geen einddatum):', u.accountEnd || '');
-  if (newEnd === null) return;
+  const newEndDMY = prompt('Accounteinddatum voor '+u.username+' (DD-MM-JJJJ, leeg = geen einddatum):', u.accountEnd ? fmtDateOnly(u.accountEnd) : '');
+  if (newEndDMY === null) return;
+  const newEndIso = parseDMY(newEndDMY);
+  if (newEndIso === undefined){ alert('Ongeldig datumformaat. Gebruik DD-MM-JJJJ.'); return; }
 
-  const body = { username: u.username, accountEnd: newEnd.trim() || null };
+  const body = { username: u.username, accountEnd: newEndIso };
   if (u.billingMode !== 'onbeperkt' && newBalance !== null) body.balance = Number(newBalance);
 
   fetch('/.netlify/functions/admin-update-user', {
@@ -427,7 +526,7 @@ document.getElementById('createUserForm').addEventListener('submit', async (e)=>
     });
     const data = await res.json().catch(()=>({}));
     if (res.ok){
-      const shown = data.generatedPassword ? (' Wachtwoord: <b>'+escapeHtml(data.generatedPassword)+'</b> — noteer dit nu, het wordt niet opnieuw getoond.') : '';
+      const shown = data.generatedPassword ? (' Wachtwoord: <b>'+escapeHtml(data.generatedPassword)+'</b>'+copyButton(data.generatedPassword)+' — noteer dit nu, het wordt niet opnieuw getoond.') : '';
       msgEl.innerHTML = '<div class="msg msg-ok">Gebruiker "'+escapeHtml(data.username)+'" aangemaakt.'+shown+'</div>';
       document.getElementById('createUserForm').reset();
       document.getElementById('cuStartBalance').value = 250;
@@ -443,6 +542,47 @@ document.getElementById('createUserForm').addEventListener('submit', async (e)=>
 /* ============================================================
    Activiteitenlog
    ============================================================ */
+let currentLog = [];
+let logSortField = 'timestamp';
+let logSortDir = 'desc';
+
+function renderLogTable(){
+  const tbody = document.getElementById('logTbody');
+  if (!currentLog.length){ tbody.innerHTML = '<tr><td colspan="5">Nog geen activiteit geregistreerd.</td></tr>'; return; }
+  const sorted = currentLog.slice().sort((a,b)=>{
+    let av = a[logSortField], bv = b[logSortField];
+    if (logSortField === 'actionType'){ av = ACTION_LABELS[av]||av||''; bv = ACTION_LABELS[bv]||bv||''; }
+    if (typeof av === 'string' || typeof bv === 'string'){
+      av = String(av==null?'':av).toLowerCase(); bv = String(bv==null?'':bv).toLowerCase();
+      return logSortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    }
+    av = av==null?0:av; bv = bv==null?0:bv;
+    return logSortDir === 'asc' ? av-bv : bv-av;
+  });
+  tbody.innerHTML = sorted.map(entry =>
+    '<tr><td>'+fmtDateTime(entry.timestamp)+'</td><td>'+escapeHtml(entry.username||'—')+'</td><td>'+escapeHtml(entry.klant||'—')+'</td><td>'+escapeHtml(ACTION_LABELS[entry.actionType]||entry.actionType||'—')+'</td><td>'+(entry.tokens!=null?entry.tokens:'—')+'</td></tr>'
+  ).join('');
+}
+
+document.querySelectorAll('#logTable th.sortable').forEach(th=>{
+  th.addEventListener('click', ()=>{
+    const field = th.getAttribute('data-sort');
+    if (logSortField === field){
+      logSortDir = logSortDir === 'asc' ? 'desc' : 'asc';
+    } else {
+      logSortField = field;
+      logSortDir = 'asc';
+    }
+    document.querySelectorAll('#logTable th.sortable').forEach(x=>{
+      x.classList.remove('sort-asc','sort-desc');
+      x.querySelector('.arrow').textContent = '';
+    });
+    th.classList.add(logSortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+    th.querySelector('.arrow').textContent = logSortDir === 'asc' ? '\u25B2' : '\u25BC';
+    renderLogTable();
+  });
+});
+
 async function loadLog(){
   const tbody = document.getElementById('logTbody');
   tbody.innerHTML = '<tr><td colspan="5">Laden...</td></tr>';
@@ -450,11 +590,8 @@ async function loadLog(){
     const res = await fetch('/.netlify/functions/admin-activity-log?limit=200');
     const data = await res.json();
     if (!res.ok){ tbody.innerHTML = '<tr><td colspan="5">'+escapeHtml(data.error||'Kon log niet laden.')+'</td></tr>'; return; }
-    const log = data.log || [];
-    if (!log.length){ tbody.innerHTML = '<tr><td colspan="5">Nog geen activiteit geregistreerd.</td></tr>'; return; }
-    tbody.innerHTML = log.map(entry =>
-      '<tr><td>'+fmtDateTime(entry.timestamp)+'</td><td>'+escapeHtml(entry.username||'—')+'</td><td>'+escapeHtml(entry.klant||'—')+'</td><td>'+escapeHtml(ACTION_LABELS[entry.actionType]||entry.actionType||'—')+'</td><td>'+(entry.tokens!=null?entry.tokens:'—')+'</td></tr>'
-    ).join('');
+    currentLog = data.log || [];
+    renderLogTable();
   } catch(e){
     tbody.innerHTML = '<tr><td colspan="5">Kon log niet laden.</td></tr>';
   }
@@ -462,6 +599,44 @@ async function loadLog(){
 document.getElementById('btnRefreshLog').addEventListener('click', loadLog);
 
 checkSession();
+
+/* ============================================================
+   Automatisch uitloggen na inactiviteit (15 min, zelfde principe als
+   in de hoofdtool).
+   ============================================================ */
+const INACTIVITY_LIMIT_MS = 15 * 60 * 1000;
+const INACTIVITY_WARNING_MS = 60 * 1000;
+let inactivityTimer = null;
+let inactivityWarningTimer = null;
+let inactivityWarningEl = null;
+
+function showInactivityWarning(){
+  if (inactivityWarningEl) return;
+  inactivityWarningEl = document.createElement('div');
+  inactivityWarningEl.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:9999;background:#fdf3e5;color:#a86a17;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.15);max-width:90vw;text-align:center;';
+  inactivityWarningEl.textContent = 'Je wordt over 1 minuut automatisch uitgelogd wegens inactiviteit.';
+  document.body.appendChild(inactivityWarningEl);
+}
+function hideInactivityWarning(){
+  if (inactivityWarningEl){ inactivityWarningEl.remove(); inactivityWarningEl = null; }
+}
+async function doInactivityLogout(){
+  hideInactivityWarning();
+  isLoggedInAdmin = false;
+  try { await fetch('/.netlify/functions/logout', { method:'POST' }); } catch(e){}
+  location.reload();
+}
+function resetInactivityTimer(){
+  clearTimeout(inactivityTimer);
+  clearTimeout(inactivityWarningTimer);
+  hideInactivityWarning();
+  if (!isLoggedInAdmin) return;
+  inactivityWarningTimer = setTimeout(showInactivityWarning, INACTIVITY_LIMIT_MS - INACTIVITY_WARNING_MS);
+  inactivityTimer = setTimeout(doInactivityLogout, INACTIVITY_LIMIT_MS);
+}
+['mousemove','keydown','mousedown','touchstart','scroll'].forEach(evtName=>{
+  document.addEventListener(evtName, ()=>{ if (isLoggedInAdmin) resetInactivityTimer(); }, { passive:true });
+});
 </script>
 </body>
 </html>
