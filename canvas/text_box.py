@@ -80,6 +80,8 @@ class PlaceholderTextBox(QGraphicsRectItem):
         # laden heen (nodig zodra er later regels/condities/een API op
         # specifieke vakken gaan verwijzen, i.p.v. steeds "het 3e tekstvak").
         self.element_id = element_id or str(uuid.uuid4())
+        self.stack_order = 0  # onderlinge volgorde bij gelijke z-waarde
+        self.locked = False  # zie set_locked()
 
         self.field_name: str | None = None  # gekoppelde kolomnaam, indien aanwezig
         self.font_family = font_family
@@ -167,7 +169,22 @@ class PlaceholderTextBox(QGraphicsRectItem):
         )
         return handle.contains(pos)
 
+    def set_locked(self, locked: bool):
+        """
+        Vergrendelt/ontgrendelt dit vak. Een vergrendeld vak kan nog wel
+        geselecteerd worden (bv. om te ontgrendelen), maar niet meer
+        versleept, geresized of verwijderd - voorkomt per ongeluk
+        wijzigen van een vak dat "af" is.
+        """
+        self.locked = locked
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable, not locked)
+
     def mousePressEvent(self, event):
+        if self.locked:
+            # Selecteren mag nog (bv. om te ontgrendelen via het
+            # rechtsklikmenu), maar geen slepen/resizen.
+            super().mousePressEvent(event)
+            return
         # Voor undo/redo: leg de staat vast VOORDAT een sleep-/resize-actie
         # begint. Een simpele klik-zonder-slepen zet ook een (dan
         # inhoudelijk identieke) snapshot op de stack - onschuldig, maar
@@ -243,7 +260,9 @@ class PlaceholderTextBox(QGraphicsRectItem):
         back_action = menu.addAction("Naar achteren plaatsen")
 
         menu.addSeparator()
+        lock_action = menu.addAction("Ontgrendelen" if self.locked else "Vergrendelen")
         delete_action = menu.addAction("Verwijderen")
+        delete_action.setEnabled(not self.locked)
 
         chosen = menu.exec(event.screenPos())
         if chosen is not None and self._canvas is not None:
@@ -280,6 +299,10 @@ class PlaceholderTextBox(QGraphicsRectItem):
             if self._canvas is not None:
                 self._canvas.send_to_back(self)
                 self._canvas.notify_changed()
+        elif chosen == lock_action:
+            self.set_locked(not self.locked)
+            if self._canvas is not None:
+                self._canvas.notify_changed()
         elif chosen == delete_action:
             self._delete_self()
 
@@ -311,6 +334,8 @@ class PlaceholderTextBox(QGraphicsRectItem):
 
     def _delete_self(self):
         """Verwijdert dit vak van het canvas en meldt de wijziging aan MainWindow."""
+        if self.locked:
+            return  # defensief: het menu-item is al uitgeschakeld, maar voor de zekerheid
         scene = self.scene()
         if scene is not None:
             scene.removeItem(self)

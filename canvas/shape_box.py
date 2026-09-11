@@ -58,6 +58,8 @@ class ShapeMaskBox(QGraphicsRectItem):
         self.setPen(self.BORDER_PENS[self.border_style])
 
         self.element_id = element_id or str(uuid.uuid4())
+        self.stack_order = 0  # onderlinge volgorde bij gelijke z-waarde
+        self.locked = False  # zie set_locked()
 
         self._canvas = None  # wordt gezet door CanvasView bij aanmaken
         self._resizing = False
@@ -97,7 +99,22 @@ class ShapeMaskBox(QGraphicsRectItem):
         )
         return handle.contains(pos)
 
+    def set_locked(self, locked: bool):
+        """
+        Vergrendelt/ontgrendelt dit vak. Een vergrendeld vak kan nog wel
+        geselecteerd worden (bv. om te ontgrendelen), maar niet meer
+        versleept, geresized of verwijderd - voorkomt per ongeluk
+        wijzigen van een vak dat "af" is.
+        """
+        self.locked = locked
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable, not locked)
+
     def mousePressEvent(self, event):
+        if self.locked:
+            # Selecteren mag nog (bv. om te ontgrendelen via het
+            # rechtsklikmenu), maar geen slepen/resizen.
+            super().mousePressEvent(event)
+            return
         # Voor undo/redo: leg de staat vast VOORDAT een sleep-/resize-actie
         # begint. Een simpele klik-zonder-slepen zet ook een (dan
         # inhoudelijk identieke) snapshot op de stack - onschuldig, maar
@@ -161,7 +178,9 @@ class ShapeMaskBox(QGraphicsRectItem):
         back_action = menu.addAction("Naar achteren plaatsen")
 
         menu.addSeparator()
+        lock_action = menu.addAction("Ontgrendelen" if self.locked else "Vergrendelen")
         delete_action = menu.addAction("Verwijderen")
+        delete_action.setEnabled(not self.locked)
 
         chosen = menu.exec(event.screenPos())
         if chosen is not None and self._canvas is not None:
@@ -193,6 +212,10 @@ class ShapeMaskBox(QGraphicsRectItem):
         elif chosen == back_action:
             if self._canvas is not None:
                 self._canvas.send_to_back(self)
+                self._canvas.notify_changed()
+        elif chosen == lock_action:
+            self.set_locked(not self.locked)
+            if self._canvas is not None:
                 self._canvas.notify_changed()
         elif chosen == delete_action:
             scene = self.scene()

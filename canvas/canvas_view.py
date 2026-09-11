@@ -48,6 +48,13 @@ class CanvasView(QGraphicsView):
         self._asset_base_dir: str | None = None
         self._asset_mapping: dict = {}
 
+        # Teller voor de ONDERLINGE volgorde van vakken met dezelfde
+        # z-waarde (z bepaalt de laag, maar bij een gelijke z-waarde
+        # bepaalt Qt de zichtbare volgorde op basis van toevoegvolgorde
+        # aan de scene - dit veld legt die volgorde expliciet vast zodat
+        # 'ie ook na opslaan/laden behouden blijft; zie load_all_boxes()).
+        self._next_stack_order = 0
+
         # Optionele callback die MainWindow hierop kan zetten, zodat vakken
         # (bv. bij het verwijderen van zichzelf) het objectenpaneel kunnen
         # laten verversen en de job als "gewijzigd" kunnen laten markeren,
@@ -85,10 +92,7 @@ class CanvasView(QGraphicsView):
         """Herbouwt alle vakken vanuit een eerder vastgelegde snapshot (undo/redo)."""
         for box in self.get_all_boxes() + self.get_shape_boxes():
             self._scene.removeItem(box)
-        self.load_text_boxes(snapshot.get("text_boxes", []))
-        self.load_image_boxes(snapshot.get("image_boxes", []))
-        self.load_barcode_boxes(snapshot.get("barcode_boxes", []))
-        self.load_shape_boxes(snapshot.get("shape_boxes", []))
+        self.load_all_boxes(snapshot)
         # Herberekent fit_all_records-groottes EN past meteen het huidige
         # record weer toe (roept intern apply_record aan).
         self.recompute_fit_all_records()
@@ -150,10 +154,15 @@ class CanvasView(QGraphicsView):
         self.fitInView(self._scene.sceneRect(), Qt.AspectRatioMode.KeepAspectRatio)
         return True, None
 
+    def _next_order(self) -> int:
+        self._next_stack_order += 1
+        return self._next_stack_order
+
     def add_text_placeholder(self):
         """Voegt een nieuw, verplaatsbaar placeholder-tekstvak toe."""
         box = PlaceholderTextBox(x=40, y=40)
         box._canvas = self
+        box.stack_order = self._next_order()
         self._scene.addItem(box)
         return box
 
@@ -161,6 +170,7 @@ class CanvasView(QGraphicsView):
         """Voegt een nieuw, verplaatsbaar placeholder-afbeeldingsvak toe."""
         box = PlaceholderImageBox(x=40, y=40)
         box._canvas = self
+        box.stack_order = self._next_order()
         self._scene.addItem(box)
         return box
 
@@ -168,6 +178,7 @@ class CanvasView(QGraphicsView):
         """Voegt een nieuw, verplaatsbaar barcode/QR-vak toe."""
         box = PlaceholderBarcodeBox(x=40, y=40)
         box._canvas = self
+        box.stack_order = self._next_order()
         self._scene.addItem(box)
         return box
 
@@ -175,6 +186,7 @@ class CanvasView(QGraphicsView):
         """Voegt een nieuw, verplaatsbaar maskeervlak toe."""
         box = ShapeMaskBox(x=40, y=40)
         box._canvas = self
+        box.stack_order = self._next_order()
         self._scene.addItem(box)
         return box
 
@@ -211,6 +223,19 @@ class CanvasView(QGraphicsView):
     def get_all_boxes(self):
         """Alle tekst-, afbeeldings- en barcodevakken samen, voor generieke bewerkingen."""
         return self.get_text_boxes() + self.get_image_boxes() + self.get_barcode_boxes()
+
+    def get_stacked_boxes(self):
+        """
+        Alle plaatsbare vakken (elk vaktype), gesorteerd van BOVENSTE naar
+        ONDERSTE laag - dus exact zoals ze zichtbaar over elkaar liggen.
+        Gebruikt scene.items(), dat door Qt zelf al in deze volgorde wordt
+        teruggegeven (topmost-eerst), inclusief het combineren van
+        z-waarde EN onderlinge toevoegvolgorde - precies wat het
+        objectenpaneel nodig heeft om exact te tonen wat je ook op het
+        canvas ziet.
+        """
+        box_types = (PlaceholderTextBox, PlaceholderImageBox, PlaceholderBarcodeBox, ShapeMaskBox)
+        return [item for item in self._scene.items() if isinstance(item, box_types)]
 
     def flag_missing_columns(self, available_columns: set[str]):
         """
@@ -356,6 +381,8 @@ class CanvasView(QGraphicsView):
                 {
                     "id": box.element_id,
                     "z": box.zValue(),
+                    "stack_order": getattr(box, "stack_order", 0),
+                    "locked": getattr(box, "locked", False),
                     "x": box.pos().x(),
                     "y": box.pos().y(),
                     "width": box.rect().width(),
@@ -379,36 +406,43 @@ class CanvasView(QGraphicsView):
             )
         return boxes
 
+    def _build_text_box(self, data: dict):
+        """Bouwt een tekstvak vanuit opgeslagen data, ZONDER het aan de scene toe te voegen."""
+        text = data.get("raw_text") or "{{veld}}"
+        box = PlaceholderTextBox(
+            x=data.get("x", 20),
+            y=data.get("y", 20),
+            width=data.get("width", 160),
+            height=data.get("height", 30),
+            text=text,
+            font_family=data.get("font_family", "Arial"),
+            base_font_size=data.get("base_font_size", 12),
+            min_font_size=data.get("min_font_size", 6),
+            fit_mode=data.get("fit_mode", "shrink_to_fit"),
+            element_id=data.get("id"),
+        )
+        box.setZValue(data.get("z", 0))
+        box.stack_order = data.get("stack_order", 0)
+        box.font_bold = data.get("font_bold", False)
+        box.font_italic = data.get("font_italic", False)
+        box._canvas = self
+        field_name = data.get("field_name")
+        if field_name:
+            box.field_name = field_name  # rechtstreeks zetten, geen recompute nu al
+        box.value_source = data.get("value_source", "field")
+        box.seq_start = data.get("seq_start", 1)
+        box.seq_step = data.get("seq_step", 1)
+        box.seq_repeat = data.get("seq_repeat", 1)
+        box.seq_pad_length = data.get("seq_pad_length", 1)
+        box.seq_prefix = data.get("seq_prefix", "")
+        box.seq_suffix = data.get("seq_suffix", "")
+        box.set_locked(data.get("locked", False))
+        return box
+
     def load_text_boxes(self, boxes_data: list[dict]):
         """Herbouwt tekstvakken vanuit opgeslagen jobdata (zie serialize_text_boxes)."""
         for data in boxes_data:
-            text = data.get("raw_text") or "{{veld}}"
-            box = PlaceholderTextBox(
-                x=data.get("x", 20),
-                y=data.get("y", 20),
-                width=data.get("width", 160),
-                height=data.get("height", 30),
-                text=text,
-                font_family=data.get("font_family", "Arial"),
-                base_font_size=data.get("base_font_size", 12),
-                min_font_size=data.get("min_font_size", 6),
-                fit_mode=data.get("fit_mode", "shrink_to_fit"),
-                element_id=data.get("id"),
-            )
-            box.setZValue(data.get("z", 0))
-            box.font_bold = data.get("font_bold", False)
-            box.font_italic = data.get("font_italic", False)
-            box._canvas = self
-            field_name = data.get("field_name")
-            if field_name:
-                box.field_name = field_name  # rechtstreeks zetten, geen recompute nu al
-            box.value_source = data.get("value_source", "field")
-            box.seq_start = data.get("seq_start", 1)
-            box.seq_step = data.get("seq_step", 1)
-            box.seq_repeat = data.get("seq_repeat", 1)
-            box.seq_pad_length = data.get("seq_pad_length", 1)
-            box.seq_prefix = data.get("seq_prefix", "")
-            box.seq_suffix = data.get("seq_suffix", "")
+            box = self._build_text_box(data)
             self._scene.addItem(box)
 
     def serialize_image_boxes(self):
@@ -419,6 +453,8 @@ class CanvasView(QGraphicsView):
                 {
                     "id": box.element_id,
                     "z": box.zValue(),
+                    "stack_order": getattr(box, "stack_order", 0),
+                    "locked": getattr(box, "locked", False),
                     "x": box.pos().x(),
                     "y": box.pos().y(),
                     "width": box.rect().width(),
@@ -429,20 +465,27 @@ class CanvasView(QGraphicsView):
             )
         return boxes
 
+    def _build_image_box(self, data: dict):
+        """Bouwt een afbeeldingsvak vanuit opgeslagen data, ZONDER het aan de scene toe te voegen."""
+        box = PlaceholderImageBox(
+            x=data.get("x", 20),
+            y=data.get("y", 20),
+            width=data.get("width", 140),
+            height=data.get("height", 100),
+            field_name=data.get("field_name"),
+            element_id=data.get("id"),
+        )
+        box.setZValue(data.get("z", 0))
+        box.stack_order = data.get("stack_order", 0)
+        box.crop_shape = data.get("crop_shape", "none")
+        box._canvas = self
+        box.set_locked(data.get("locked", False))
+        return box
+
     def load_image_boxes(self, boxes_data: list[dict]):
         """Herbouwt afbeeldingsvakken vanuit opgeslagen jobdata."""
         for data in boxes_data:
-            box = PlaceholderImageBox(
-                x=data.get("x", 20),
-                y=data.get("y", 20),
-                width=data.get("width", 140),
-                height=data.get("height", 100),
-                field_name=data.get("field_name"),
-                element_id=data.get("id"),
-            )
-            box.setZValue(data.get("z", 0))
-            box.crop_shape = data.get("crop_shape", "none")
-            box._canvas = self
+            box = self._build_image_box(data)
             self._scene.addItem(box)
 
     def serialize_barcode_boxes(self):
@@ -453,6 +496,8 @@ class CanvasView(QGraphicsView):
                 {
                     "id": box.element_id,
                     "z": box.zValue(),
+                    "stack_order": getattr(box, "stack_order", 0),
+                    "locked": getattr(box, "locked", False),
                     "x": box.pos().x(),
                     "y": box.pos().y(),
                     "width": box.rect().width(),
@@ -463,20 +508,27 @@ class CanvasView(QGraphicsView):
             )
         return boxes
 
+    def _build_barcode_box(self, data: dict):
+        """Bouwt een barcode/QR-vak vanuit opgeslagen data, ZONDER het aan de scene toe te voegen."""
+        box = PlaceholderBarcodeBox(
+            x=data.get("x", 20),
+            y=data.get("y", 20),
+            width=data.get("width", 100),
+            height=data.get("height", 100),
+            field_name=data.get("field_name"),
+            barcode_type=data.get("barcode_type", "qr"),
+            element_id=data.get("id"),
+        )
+        box.setZValue(data.get("z", 0))
+        box.stack_order = data.get("stack_order", 0)
+        box._canvas = self
+        box.set_locked(data.get("locked", False))
+        return box
+
     def load_barcode_boxes(self, boxes_data: list[dict]):
         """Herbouwt barcode/QR-vakken vanuit opgeslagen jobdata."""
         for data in boxes_data:
-            box = PlaceholderBarcodeBox(
-                x=data.get("x", 20),
-                y=data.get("y", 20),
-                width=data.get("width", 100),
-                height=data.get("height", 100),
-                field_name=data.get("field_name"),
-                barcode_type=data.get("barcode_type", "qr"),
-                element_id=data.get("id"),
-            )
-            box.setZValue(data.get("z", 0))
-            box._canvas = self
+            box = self._build_barcode_box(data)
             self._scene.addItem(box)
 
     def serialize_shape_boxes(self):
@@ -487,6 +539,8 @@ class CanvasView(QGraphicsView):
                 {
                     "id": box.element_id,
                     "z": box.zValue(),
+                    "stack_order": getattr(box, "stack_order", 0),
+                    "locked": getattr(box, "locked", False),
                     "x": box.pos().x(),
                     "y": box.pos().y(),
                     "width": box.rect().width(),
@@ -497,21 +551,84 @@ class CanvasView(QGraphicsView):
             )
         return boxes
 
+    def _build_shape_box(self, data: dict):
+        """Bouwt een maskeervlak vanuit opgeslagen data, ZONDER het aan de scene toe te voegen."""
+        box = ShapeMaskBox(
+            x=data.get("x", 20),
+            y=data.get("y", 20),
+            width=data.get("width", 120),
+            height=data.get("height", 60),
+            color=data.get("color", "#ffffff"),
+            border_style=data.get("border_style", "dashed"),
+            element_id=data.get("id"),
+        )
+        box.setZValue(data.get("z", 0))
+        box.stack_order = data.get("stack_order", 0)
+        box._canvas = self
+        box.set_locked(data.get("locked", False))
+        return box
+
     def load_shape_boxes(self, boxes_data: list[dict]):
         """Herbouwt maskeervlakken vanuit opgeslagen jobdata."""
         for data in boxes_data:
-            box = ShapeMaskBox(
-                x=data.get("x", 20),
-                y=data.get("y", 20),
-                width=data.get("width", 120),
-                height=data.get("height", 60),
-                color=data.get("color", "#ffffff"),
-                border_style=data.get("border_style", "dashed"),
-                element_id=data.get("id"),
-            )
-            box.setZValue(data.get("z", 0))
-            box._canvas = self
+            box = self._build_shape_box(data)
             self._scene.addItem(box)
+
+    def load_all_boxes(self, manifest: dict):
+        """
+        Herbouwt ALLE vaktypes in ÉÉN samengevoegde, op stack_order
+        gesorteerde volgorde - in plaats van de vier vaktypes apart na
+        elkaar te laden (tekst, dan afbeelding, dan barcode, dan pas
+        maskeervlakken).
+
+        BUG DIE DIT OPLOST: bij een GELIJKE z-waarde (de standaard,
+        zolang je nooit expliciet "naar voren/achteren" hebt gebruikt)
+        bepaalt Qt de zichtbare stapelvolgorde op basis van de volgorde
+        waarin vakken aan de scene zijn toegevoegd. De oude, per-type
+        volgorde (altijd tekst -> afbeelding -> barcode -> maskeer)
+        kwam daardoor NIET overeen met de oorspronkelijke aanmaak-/
+        sleepvolgorde van de gebruiker - een maskeervlak kon zo na het
+        heropenen van een job plotseling boven een barcode komen te
+        liggen, terwijl het er bij het opslaan onder stond.
+
+        Oudere jobbestanden (vóór deze build) hebben nog geen
+        stack_order opgeslagen - die vallen terug op de oude, vaste
+        volgorde (tekst/afbeelding/barcode/maskeer), identiek aan het
+        eerdere gedrag.
+        """
+        entries = []
+        for data in manifest.get("text_boxes", []):
+            entries.append(("text", data))
+        for data in manifest.get("image_boxes", []):
+            entries.append(("image", data))
+        for data in manifest.get("barcode_boxes", []):
+            entries.append(("barcode", data))
+        for data in manifest.get("shape_boxes", []):
+            entries.append(("shape", data))
+
+        normalized = []
+        for i, (box_type, data) in enumerate(entries):
+            if "stack_order" not in data:
+                data = dict(data)
+                data["stack_order"] = i
+            normalized.append((box_type, data))
+        normalized.sort(key=lambda pair: pair[1].get("stack_order", 0))
+
+        builders = {
+            "text": self._build_text_box,
+            "image": self._build_image_box,
+            "barcode": self._build_barcode_box,
+            "shape": self._build_shape_box,
+        }
+        boxes = [builders[box_type](data) for box_type, data in normalized]
+
+        max_order = max((b.stack_order for b in boxes), default=-1)
+        if max_order >= self._next_stack_order:
+            self._next_stack_order = max_order + 1
+
+        for box in boxes:
+            self._scene.addItem(box)
+
 
     def reset(self):
         """Wist het canvas volledig (nieuwe/lege job)."""

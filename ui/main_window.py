@@ -23,6 +23,7 @@ from app_version import APP_VERSION
 from canvas.barcode_box import PlaceholderBarcodeBox
 from canvas.canvas_view import CanvasView
 from canvas.image_box import PlaceholderImageBox
+from canvas.shape_box import ShapeMaskBox
 from canvas.text_box import PlaceholderTextBox
 from project.package import open_job, save_job
 from ui.data_panel import DataPanel
@@ -190,12 +191,18 @@ class MainWindow(QMainWindow):
     def _build_docks(self):
         objects_dock = QDockWidget("Objecten", self)
         self.objects_panel = ObjectsPanel()
+        self.objects_panel.item_selected.connect(self.on_object_item_selected)
+        self.objects_panel.order_changed.connect(self.on_objects_reordered)
         objects_dock.setWidget(self.objects_panel)
         objects_dock.setFeatures(
             QDockWidget.DockWidgetFeature.DockWidgetMovable
             | QDockWidget.DockWidgetFeature.DockWidgetFloatable
         )
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, objects_dock)
+
+        # Omgekeerde koppeling: een selectie op het CANVAS (klik op een
+        # vak) licht de bijbehorende regel in het objectenpaneel op.
+        self.canvas._scene.selectionChanged.connect(self._on_canvas_selection_changed)
 
         data_dock = QDockWidget("Data", self)
         self.data_panel = DataPanel()
@@ -598,9 +605,15 @@ class MainWindow(QMainWindow):
         self._refresh_objects_panel()
 
     def _refresh_objects_panel(self):
-        self.objects_panel.object_list.clear()
-        self.objects_panel.object_list.addItem("Background (locked)")
-        for box in self.canvas.get_text_boxes():
+        entries = []
+        for box in self.canvas.get_stacked_boxes():
+            entries.append((self._label_for_box(box), box))
+        entries.append(("Background", None))  # altijd onderaan, niet sleepbaar/selecteerbaar
+        self.objects_panel.set_objects(entries)
+
+    @staticmethod
+    def _label_for_box(box) -> str:
+        if isinstance(box, PlaceholderTextBox):
             if box.value_source == "sequence":
                 affix = f"{box.seq_prefix}...{box.seq_suffix}" if (box.seq_prefix or box.seq_suffix) else ""
                 label = f"🔢 Nummering {affix}".strip()
@@ -608,20 +621,54 @@ class MainWindow(QMainWindow):
                 label = f"{{{{{box.field_name}}}}}" if box.field_name else "{{veld}}"
             if getattr(box, "_is_overflowing", False):
                 label = f"⚠ {label} (past niet)"
-            self.objects_panel.object_list.addItem(label)
-        for box in self.canvas.get_image_boxes():
+            return label
+        if isinstance(box, PlaceholderImageBox):
             label = f"🖼 {{{{{box.field_name}}}}}" if box.field_name else "🖼 afbeeldingsvak"
             if getattr(box, "_is_overflowing", False):
                 label = f"⚠ {label} (niet gevonden)"
-            self.objects_panel.object_list.addItem(label)
-        for box in self.canvas.get_barcode_boxes():
+            return label
+        if isinstance(box, PlaceholderBarcodeBox):
             type_label = "QR" if box.barcode_type == "qr" else "Barcode"
             label = f"▦ {type_label} {{{{{box.field_name}}}}}" if box.field_name else f"▦ {type_label}-vak"
             if getattr(box, "_is_overflowing", False):
                 label = f"⚠ {label} (kon niet genereren)"
-            self.objects_panel.object_list.addItem(label)
-        for box in self.canvas.get_shape_boxes():
-            self.objects_panel.object_list.addItem(f"▭ Maskeervlak ({box.color})")
+            return label
+        if isinstance(box, ShapeMaskBox):
+            return f"▭ Maskeervlak ({box.color})"
+        return "Onbekend vak"
+
+    # ------------------------------------------------------------------
+    def on_object_item_selected(self, box):
+        """Klik op een regel in het objectenpaneel -> selecteert dat vak op het canvas."""
+        self.canvas._scene.clearSelection()
+        box.setSelected(True)
+
+    def on_objects_reordered(self, boxes_top_to_bottom: list):
+        """
+        Na het slepen van een regel in het objectenpaneel: normaliseert
+        de z-waarde EN stack_order van ALLE vakken naar een schone,
+        ondubbelzinnige reeks die overeenkomt met de nieuwe volgorde in
+        de lijst. Dit lost meteen ook eventuele restanten van de
+        "gelijke z-waarde"-dubbelzinnigheid op (zie de eerder gevonden
+        laagvolgorde-bug) - na een handmatige herordening is er geen
+        ambiguïteit meer over.
+        """
+        self.canvas.capture_undo_point()
+        n = len(boxes_top_to_bottom)
+        for i, box in enumerate(boxes_top_to_bottom):
+            order_value = n - i  # bovenste regel = hoogste waarde
+            box.setZValue(order_value)
+            box.stack_order = order_value
+        self._refresh_objects_panel()
+        self.mark_dirty()
+
+    def _on_canvas_selection_changed(self):
+        """Selectie op het CANVAS -> licht de bijbehorende regel in het objectenpaneel op."""
+        selected = [item for item in self.canvas._scene.selectedItems() if hasattr(item, "element_id")]
+        if len(selected) == 1:
+            self.objects_panel.highlight_box(selected[0])
+        else:
+            self.objects_panel.highlight_box(None)
 
     # ------------------------------------------------------------------
     def _push_undo_snapshot(self):
@@ -787,10 +834,7 @@ class MainWindow(QMainWindow):
         # overschrijven (zie project/package.py).
         self.canvas.set_asset_mapping(opened.get("asset_mapping"))
 
-        self.canvas.load_text_boxes(manifest.get("text_boxes", []))
-        self.canvas.load_image_boxes(manifest.get("image_boxes", []))
-        self.canvas.load_barcode_boxes(manifest.get("barcode_boxes", []))
-        self.canvas.load_shape_boxes(manifest.get("shape_boxes", []))
+        self.canvas.load_all_boxes(manifest)
 
         self.current_index = -1
         data_path = opened["data_path"]

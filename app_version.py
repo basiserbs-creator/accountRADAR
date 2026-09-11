@@ -5,4 +5,4 @@ import (main.py importeert MainWindow uit ui.main_window, dus
 main_window.py kan niet omgekeerd weer uit main.py importeren).
 """
 
-APP_VERSION = "build 18"
+APP_VERSION = "build 19"
