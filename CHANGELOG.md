@@ -1,5 +1,9 @@
 # accountRADAR — changelog
 
+## v4.3.1 — 10-09-2026
+- **Ernstige bugfix:** als de browser zelf een eerder ingelogde gebruikersnaam in het zoekveld plaatste (autofill), filterde dat daadwerkelijk de hele kaart leeg — geen enkel account matchte die naam als zoekterm, terwijl de aantallen in de zijbalk (los berekend) gewoon correct bleven tonen. Verwarrend, want het leek zo alsof alle data weg was. Het zoekveld is nu steviger beveiligd tegen browser-autofill met drie onafhankelijke lagen: een steeds wisselende veldnaam, het veld staat pas typbaar zodra je er zelf in klikt/tikt (readonly-tot-focus, een bekende betrouwbare omweg), en een herhaalde controle kort na het laden die eventueel toch doorgeglipte autofill alsnog leegmaakt — zonder ooit een echt door jou getypte zoekterm aan te raken (apart geverifieerd).
+- Mogelijke verbetering voor liggend gebruik op iPhone waarbij knoppen in het uitklapmenu niet precies op hun zichtbare plek reageren op een tik — een bekende, veelgebruikte technische maatregel (GPU-compositing forceren op de betrokken knoppen) toegepast tegen dit type iOS-weergavefout. Nog niet op een echt toestel bevestigd; laat het weten als dit niet volledig oplost, dan zoeken we specifieker verder.
+
 ## v4.3.0 — 09-09-2026
 - **Bugfix:** de knoppen "toevoegen"/"niet interessant" in een prospect-popup reageerden soms niet, als de popup onder de balk bovenin (AVG-tekst/logo) verscheen — die balk had een hogere weergavelaag (z-index) dan de popups, en onderschepte daardoor de kliks. Verlaagd naar onder het niveau van popups (maar nog boven de kaarttegels).
 - "Zoek bedrijven in deze regio" toont nu direct een "Bezig..."-melding en schakelt de knop kort uit bij een klik, zodat de klik meteen voelbaar is — eerder kon een trage serverstart (1-3 sec.) laten lijken alsof er niets gebeurde.
