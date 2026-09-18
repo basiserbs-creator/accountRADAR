@@ -1,0 +1,11 @@
+{
+  "name": "accountradar",
+  "private": true,
+  "version": "2.0.0",
+  "description": "accountRADAR - Netlify Functions voor login en Google Places-proxy",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "@netlify/blobs": "^7.3.0"
+  }
+}
